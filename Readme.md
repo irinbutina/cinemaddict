@@ -1,9 +1,5 @@
 # Проект «Киноман»
 
-* Студент: [Vlad Ivanishin](https://up.htmlacademy.ru/ecmascript/19/user/792583).
-* Наставник: `Неизвестно`.
-
----
 
 _Не удаляйте и не изменяйте папки и файлы:_
 _`.editorconfig`, `.gitattributes`._
