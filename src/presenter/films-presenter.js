@@ -6,12 +6,30 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
+const FilmsListTitle = {
+  ALL: 'All movies. Upcoming',
+  TOP: 'Top rated',
+  COMMENTED:'Most commented'
+};
+
 export default class FilmsPresenter {
   filmsContentComponent = new FilmsContentView();
-  filmsListComponent = new FilmsListView();
-  filmsListContainer = new FilmsListContainerView();
-  showMoreButtonComponent = new ShowMoreButtonView();
+  filmsListAllComponent = new FilmsListView({
+    extra: false,
+    title: FilmsListTitle.ALL
+  });
 
+  filmsListExtraTopComponent = new FilmsListView({
+    extra: true,
+    title: FilmsListTitle.TOP
+  });
+
+  filmsListCommentedComponent = new FilmsListView({
+    extra: 'films-list--extra',
+    title: FilmsListTitle.COMMENTED
+  });
+
+  showMoreButtonComponent = new ShowMoreButtonView();
 
   constructor({filmsContainer}) {
     this.filmsContainer = filmsContainer;
@@ -19,14 +37,36 @@ export default class FilmsPresenter {
 
   init() {
     render (this.filmsContentComponent, this.filmsContainer);
-    render (this.filmsListComponent, this.filmsContentComponent.element);
-    render (this.filmsListContainer, this.filmsListComponent.element);
+    this.renderFilmsList();
+  }
+
+  renderFilmsListAll() {
+    const filmsListAllContainerComponent = new FilmsListContainerView();
+    render (filmsListAllContainerComponent, this.filmsListAllComponent.element);
 
     for (let i = 0; i < 5; i++) {
-      render(new FilmCardView(), this.filmsListContainer.element);
+      render(new FilmCardView(), filmsListAllContainerComponent.element);
     }
+    render (this.showMoreButtonComponent, this.filmsListAllComponent.element);
+  }
 
-    render (this.showMoreButtonComponent, this.filmsListComponent.element);
+  renderFilmsListExtra(container) {
+    const filmsListExtraContainerComponent = new FilmsListContainerView();
+    render (filmsListExtraContainerComponent, container);
+    for (let i = 0; i < 2; i++) {
+      render(new FilmCardView(), filmsListExtraContainerComponent.element);
+    }
+  }
+
+  renderFilmsList() {
+    render (this.filmsListAllComponent, this.filmsContentComponent.element);
+    this.renderFilmsListAll();
+
+    this.renderFilmsListExtra(this.filmsListExtraTopComponent.element);
+    render (this.filmsListExtraTopComponent, this.filmsContentComponent.element);
+
+    this.renderFilmsListExtra(this.filmsListCommentedComponent.element);
+    render (this.filmsListCommentedComponent, this.filmsContentComponent.element);
   }
 }
 
