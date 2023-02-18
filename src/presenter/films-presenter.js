@@ -3,8 +3,10 @@ import FilmsContentView from '../view/films-content-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view';
 import FilmCardView from '../view/film-card-view.js';
-import FilmDetailsView from '../view/film-details-view.js';
+// import FilmDetailsView from '../view/film-details-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
+
+import { CardCount } from '../const';
 
 const FilmsListTitle = {
   ALL: 'All movies. Upcoming',
@@ -44,7 +46,7 @@ export default class FilmsPresenter {
     const filmsListAllContainerComponent = new FilmsListContainerView();
     render (filmsListAllContainerComponent, this.filmsListAllComponent.element);
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < CardCount.ALL; i++) {
       render(new FilmCardView(), filmsListAllContainerComponent.element);
     }
     render (this.showMoreButtonComponent, this.filmsListAllComponent.element);
@@ -53,7 +55,7 @@ export default class FilmsPresenter {
   renderFilmsListExtra(container) {
     const filmsListExtraContainerComponent = new FilmsListContainerView();
     render (filmsListExtraContainerComponent, container);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < CardCount.EXTRA; i++) {
       render(new FilmCardView(), filmsListExtraContainerComponent.element);
     }
   }
