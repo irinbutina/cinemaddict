@@ -13,9 +13,9 @@ const generateCard = () => {
   const director = getRandomArrayElement(teamFilm.PRODUCER);
   const writers = getRandomArrayElements(teamFilm.WRITERS, MinCount.WRITERS, MaxCount.WRITERS);
   const actors = getRandomArrayElements(teamFilm.ACTORS, MinCount.ACTORS, MaxCount.ACTORS);
-  const releaseDate = dayjs().add(getRandomInteger(0, 10), 'day');
+  const releaseDate = dayjs('1920').add(getRandomInteger(0, 1200), 'M');
   const releaseCountry = getRandomArrayElement(COUNTRIES);
-  const duration = getRandomInteger(MinCount.MINUTES, MaxCount.MINUTES);
+  const duration = getRandomInteger(MinCount.DURATION, MaxCount.DURATION);
   const genre = getRandomArrayElements(GENRES, MinCount.GENRES, MaxCount.GENRES);
   const description = `${getRandomArrayElements(descriptionText, MinCount.DESCRIPTION_COUNT, descriptionText.length).join('. ')}.`;
 

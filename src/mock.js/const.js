@@ -2,7 +2,7 @@
 export const MinCount = {
   RATING: 0,
   HOURS: 1,
-  MINUTES: 70,
+  DURATION: 50,
   DESCRIPTION_COUNT: 3,
   COMMENTS: 0,
   GENRES: 1,
@@ -12,7 +12,7 @@ export const MinCount = {
 export const MaxCount = {
   RATING: 10,
   HOURS: 3,
-  MINUTES: 200,
+  DURATION: 200,
   DESCRIPTION_COUNT: 5,
   DESCRIPTION_LENGTH: 140,
   COMMENTS: 5,

@@ -33,11 +33,13 @@ export default class FilmsPresenter {
 
   showMoreButtonComponent = new ShowMoreButtonView();
 
-  constructor({filmsContainer}) {
+  constructor({filmsContainer, filmsModel}) {
     this.filmsContainer = filmsContainer;
+    this.filmsModel = filmsModel;
   }
 
   init() {
+    this.boardFilms = [...this.filmsModel.getFilms()];
     render (this.filmsContentComponent, this.filmsContainer);
     this.renderFilmsList();
   }
@@ -46,8 +48,8 @@ export default class FilmsPresenter {
     const filmsListAllContainerComponent = new FilmsListContainerView();
     render (filmsListAllContainerComponent, this.filmsListAllComponent.element);
 
-    for (let i = 0; i < CardCount.ALL; i++) {
-      render(new FilmCardView(), filmsListAllContainerComponent.element);
+    for (let i = 0; i < this.boardFilms.length; i++) {
+      render(new FilmCardView({film: this.boardFilms[i]}), filmsListAllContainerComponent.element);
     }
     render (this.showMoreButtonComponent, this.filmsListAllComponent.element);
   }
@@ -56,7 +58,7 @@ export default class FilmsPresenter {
     const filmsListExtraContainerComponent = new FilmsListContainerView();
     render (filmsListExtraContainerComponent, container);
     for (let i = 0; i < CardCount.EXTRA; i++) {
-      render(new FilmCardView(), filmsListExtraContainerComponent.element);
+      render(new FilmCardView({film: this.boardFilms[i]}), filmsListExtraContainerComponent.element);
     }
   }
 
