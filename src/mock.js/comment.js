@@ -3,6 +3,17 @@ import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomInteger } from './random.js';
 import { COMMENTS_EMOTION } from '../const.js';
 
+
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
+
+
+const COMMENTS_COUNT = 5;
+
+
 const COMMENTS_AUTORS = [
   'Lilly Sanchez',
   'Leah Rodriguez',
@@ -27,17 +38,17 @@ const COMMENTS_TEXTS = [
 ];
 
 const generateComment = () => {
-  const getDate = dayjs().add(getRandomInteger(0, 10), 'day');
-
+  const date = dayjs().subtract(getRandomInteger(0, 10000), 'm');
   return {
     id: nanoid(),
     author: getRandomArrayElement(COMMENTS_AUTORS),
-    comment: getRandomArrayElement(COMMENTS_TEXTS),
-    date: getDate,
+    commentText: getRandomArrayElement(COMMENTS_TEXTS),
+    date,
     emotion: getRandomArrayElement(COMMENTS_EMOTION),
   };
 };
 
 const generateCommentsList = (count) => Array.from({length: count}, generateComment);
 
-export { generateComment, generateCommentsList };
+const commentsList = generateCommentsList(COMMENTS_COUNT);
+export { commentsList };
