@@ -2,7 +2,6 @@ import NavigationView from './view/navigation-view.js';
 import SortView from './view/sort-view.js';
 import ProfileView from './view/profile-view.js';
 import FilmsModel from './model/films-model.js';
-import CommentsModel from './model/comments-model.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
 import { render } from './framework/render.js';
@@ -13,12 +12,10 @@ const siteFooterElement = document.querySelector('.footer');
 const footerStatisticsContainer = siteFooterElement.querySelector('.footer__statistics');
 
 const filmsModel = new FilmsModel();
-const commentsModel = new CommentsModel();
 
 const filmsPresenter = new FilmsPresenter({
   filmsContainer: siteMainElement,
-  filmsModel,
-  commentsModel,
+  filmsModel
 });
 
 render (new ProfileView(), siteHeaderElement);

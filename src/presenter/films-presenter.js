@@ -41,10 +41,10 @@ export default class FilmsPresenter {
 
   init() {
     this.filmsAll = [...this.filmsModel.getFilms()];
-    this.commentsAll = [...this.commentsModel.getComments()];
+    this.commentsAll = [...this.filmsModel.getComments()];
     render (this.filmsContentComponent, this.filmsContainer);
     this.renderFilmsList();
-    this.renderFilmPopup();
+    // this.renderFilmPopup();
   }
 
   renderFilmsListAll() {
