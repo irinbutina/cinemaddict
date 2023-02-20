@@ -1,6 +1,5 @@
-import { render } from '../framework/render';
+import { render } from '../framework/render.js';
 import ProfileView from '../view/profile-view.js';
-
 
 export default class HeaderPresenter {
   constructor ({container, filmsModel }) {
