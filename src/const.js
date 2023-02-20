@@ -5,5 +5,11 @@ const CardCount = {
   EXTRA: 2,
 };
 
-export { COMMENTS_EMOTION, CardCount };
+const PROFILE_RATING = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie Buff'
+};
+
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING };
 

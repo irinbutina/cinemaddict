@@ -4,11 +4,11 @@ import { getRandomArrayElement, getRandomInteger } from './random.js';
 import { COMMENTS_EMOTION } from '../const.js';
 
 
-import duration from 'dayjs/plugin/duration';
-import relativeTime from 'dayjs/plugin/relativeTime';
+// // import duration from 'dayjs/plugin/duration';
+// import relativeTime from 'dayjs/plugin/relativeTime';
 
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
+// // dayjs.extend(duration);
+// dayjs.extend(relativeTime);
 
 
 const COMMENTS_COUNT = 5;

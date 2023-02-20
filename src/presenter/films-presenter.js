@@ -33,18 +33,17 @@ export default class FilmsPresenter {
 
   showMoreButtonComponent = new ShowMoreButtonView();
 
-  constructor({filmsContainer, filmsModel, commentsModel}) {
+  constructor({filmsContainer, filmsModel}) {
     this.filmsContainer = filmsContainer;
     this.filmsModel = filmsModel;
-    this.commentsModel = commentsModel;
   }
 
   init() {
-    this.filmsAll = [...this.filmsModel.getFilms()];
-    this.commentsAll = [...this.filmsModel.getComments()];
+    this.filmsAll = [...this.filmsModel.films];
+    this.commentsAll = [...this.filmsModel.comments];
     render (this.filmsContentComponent, this.filmsContainer);
     this.renderFilmsList();
-    // this.renderFilmPopup();
+    this.renderFilmPopup();
   }
 
   renderFilmsListAll() {
