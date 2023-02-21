@@ -3,16 +3,7 @@ import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomInteger } from './random.js';
 import { COMMENTS_EMOTION } from '../const.js';
 
-
-// // import duration from 'dayjs/plugin/duration';
-// import relativeTime from 'dayjs/plugin/relativeTime';
-
-// // dayjs.extend(duration);
-// dayjs.extend(relativeTime);
-
-
 const COMMENTS_COUNT = 5;
-
 
 const COMMENTS_AUTORS = [
   'Lilly Sanchez',

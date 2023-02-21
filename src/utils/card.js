@@ -27,3 +27,7 @@ export const humanizeCommentsDate = (date) => (dayjs().diff(date, 'm') <= 2880) 
 
 export const descriptionTextShort = (text) => text.length <= MAX_SYMBOL_SHORT_TEXT ? text : `${text.slice(0, MAX_SYMBOL_SHORT_TEXT)}…`;
 
+// export const isWatchlist = (films, action) => films.filter((film) => film.userDetails.alreadyWatched).length;
+// export const isAlreadyWatched =
+// export const isFavorites
+

@@ -10,6 +10,25 @@ const PROFILE_RATING = {
   FAN: 'Fan',
   MOVIE_BUFF: 'Movie Buff'
 };
+const Filters = [
+  {
+    title: 'All movies',
+    link: 'all',
+  },
+  {
+    title: 'Watchlist',
+    link: 'watchlist',
+  },
+  {
+    title: 'History',
+    link: 'history',
+  },
+  {
+    title: 'Favorites',
+    link: 'favorites',
+  },
+];
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING };
+
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters };
 

@@ -1,4 +1,4 @@
-import NavigationView from './view/navigation-view.js';
+import FiltersView from './view/filters-view.js';
 import SortView from './view/sort-view.js';
 import FilmsModel from './model/films-model.js';
 import FilmsPresenter from './presenter/films-presenter.js';
@@ -30,7 +30,7 @@ const footerPresenter = new FooterPresenter ({
 
 headerPresenter.init();
 
-render (new NavigationView(), siteMainElement);
+render (new FiltersView({films: filmsModel.films}), siteMainElement);
 render (new SortView(), siteMainElement);
 
 filmsPresenter.init();
