@@ -6,7 +6,8 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import { CardCount } from '../const';
+import { CardCount, SortType } from '../const';
+import { sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
 
 const FilmsListTitle = {
   ALL: 'All movies. Upcoming',
@@ -46,6 +47,15 @@ export default class FilmsPresenter {
     // this.renderFilmPopup();
   }
 
+  sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.MOST_COMMENTED:
+        return this.filmsAll.slice().sort(sortFilmsByCommented);
+      case SortType.TOP_RATED:
+        return this.filmsAll.slice().sort(sortFilmsByRated);
+    }
+  }
+
   renderFilmsListAll() {
     const filmsListAllContainerComponent = new FilmsListContainerView();
     render (filmsListAllContainerComponent, this.filmsListAllComponent.element);
@@ -56,11 +66,11 @@ export default class FilmsPresenter {
     render (this.showMoreButtonComponent, this.filmsListAllComponent.element);
   }
 
-  renderFilmsListExtra(container) {
+  renderFilmsListExtra(container, sortType) {
     const filmsListExtraContainerComponent = new FilmsListContainerView();
     render (filmsListExtraContainerComponent, container);
     for (let i = 0; i < CardCount.EXTRA; i++) {
-      render(new FilmCardView({film: this.filmsAll[i]}), filmsListExtraContainerComponent.element);
+      render(new FilmCardView({film: this.sortFilms(sortType)[i]}), filmsListExtraContainerComponent.element);
     }
   }
 
@@ -68,10 +78,10 @@ export default class FilmsPresenter {
     render (this.filmsListAllComponent, this.filmsContentComponent.element);
     this.renderFilmsListAll();
 
-    this.renderFilmsListExtra(this.filmsListExtraTopComponent.element);
+    this.renderFilmsListExtra(this.filmsListExtraTopComponent.element, SortType.TOP_RATED);
     render (this.filmsListExtraTopComponent, this.filmsContentComponent.element);
 
-    this.renderFilmsListExtra(this.filmsListCommentedComponent.element);
+    this.renderFilmsListExtra(this.filmsListCommentedComponent.element, SortType.MOST_COMMENTED);
     render (this.filmsListCommentedComponent, this.filmsContentComponent.element);
   }
 

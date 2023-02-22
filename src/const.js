@@ -29,6 +29,11 @@ const Filters = [
   },
 ];
 
+const SortType = {
+  TOP_RATED: 'Top rated',
+  MOST_COMMENTED: 'Most commented'
+};
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters };
+
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters, SortType };
 

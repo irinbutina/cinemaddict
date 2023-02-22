@@ -16,3 +16,6 @@ export const getProfileRating = (rating) => {
   }
 };
 
+export const sortFilmsByCommented = (a, b) => b.commentsID.length - a.commentsID.length;
+
+export const sortFilmsByRated = (a, b) => b.filmInfo.rating - a.filmInfo.rating;
