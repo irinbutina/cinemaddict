@@ -19,12 +19,14 @@ ${createFiltersTemplate(films)}
 </nav>`;
 
 export default class FiltersView extends AbstractView {
+  #films = null;
+
   constructor({films}) {
     super();
-    this.films = films;
+    this.#films = films;
   }
 
   get template() {
-    return createNavigationTemplate(this.films);
+    return createNavigationTemplate(this.#films);
   }
 }

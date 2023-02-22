@@ -2,16 +2,19 @@ import { render } from '../framework/render.js';
 import FooterStatisticsView from '../view/footer-statistics-view.js';
 
 export default class FooterPresenter {
+  #container = null;
+  #filmsModel = null;
+
   constructor ({container, filmsModel }) {
-    this.container = container;
-    this.filmsModel = filmsModel;
+    this.#container = container;
+    this.#filmsModel = filmsModel;
   }
 
   init() {
-    this.renderFooterStatistics();
+    this.#renderFooterStatistics();
   }
 
-  renderFooterStatistics() {
-    render (new FooterStatisticsView({countfilms: this.filmsModel.films.length}), this.container);
+  #renderFooterStatistics() {
+    render (new FooterStatisticsView({countfilms: this.#filmsModel.films.length}), this.#container);
   }
 }

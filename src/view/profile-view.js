@@ -25,12 +25,14 @@ const createProfileTemplate = (rating) => {
 };
 
 export default class ProfileView extends AbstractView {
+  #rating = null;
+
   constructor({rating}) {
     super();
-    this.rating = rating;
+    this.#rating = rating;
   }
 
   get template() {
-    return createProfileTemplate(this.rating);
+    return createProfileTemplate(this.#rating);
   }
 }

@@ -5,14 +5,17 @@ const createFilmsListTemplate = (extra, title) =>`<section class="films-list ${e
 </section>`;
 
 export default class FilmsListView extends AbstractView {
+  #extra = null;
+  #title = null;
+
   constructor({extra, title}) {
     super();
-    this.extra = extra;
-    this.title = title;
+    this.#extra = extra;
+    this.#title = title;
   }
 
   get template() {
-    return createFilmsListTemplate(this.extra, this.title);
+    return createFilmsListTemplate(this.#extra, this.#title);
   }
 
 }

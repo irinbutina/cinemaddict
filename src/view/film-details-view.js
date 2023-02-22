@@ -146,14 +146,17 @@ const createFilmDetailsTemplate = (film, comments) => {
 };
 
 export default class FilmDetailsView extends AbstractView {
+  #film = null;
+  #comments = null;
+
   constructor({ film, comments }) {
     super();
-    this.film = film;
-    this.comments = comments;
+    this.#film = film;
+    this.#comments = comments;
   }
 
   get template() {
-    return createFilmDetailsTemplate(this.film, this.comments);
+    return createFilmDetailsTemplate(this.#film, this.#comments);
   }
 
 }
