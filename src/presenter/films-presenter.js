@@ -7,7 +7,7 @@ import FilmDetailsView from '../view/film-details-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
 import { CardCount, SortType } from '../const';
-import { sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
+import { isEscKey, sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
 
 const FilmsListTitle = {
   ALL: 'All movies. Upcoming',
@@ -62,7 +62,39 @@ export default class FilmsPresenter {
   }
 
   #renderFilm(film, container){
+    const bodyElement = document.querySelector('body');
     const filmComponent = new FilmCardView({film});
+    const filmPopupComponent = new FilmDetailsView({film, comments: this.#commentsAll});
+
+    const openPopup = () => {
+      bodyElement.classList.add('hide-overflow');
+      bodyElement.appendChild(filmPopupComponent.element);
+    };
+
+    const closePopup = () => {
+      bodyElement.classList.remove('hide-overflow');
+      bodyElement.removeChild(filmPopupComponent.element);
+    };
+
+    const escKeyDownHandler = (evt) => {
+      if (isEscKey(evt)) {
+        evt.preventDefault();
+        closePopup();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    filmComponent.element.querySelector('.film-card__link').addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openPopup();
+      document.addEventListener('keydown', escKeyDownHandler);
+    });
+
+    filmPopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
+      evt.preventDefault();
+      closePopup();
+    });
+
     render(filmComponent, container);
   }
 
@@ -95,9 +127,5 @@ export default class FilmsPresenter {
     render (this.#filmsListCommentedComponent, this.#filmsContentComponent.element);
   }
 
-  #renderFilmPopup() {
-    const bodyElement = document.querySelector('body');
-    render(new FilmDetailsView({film: this.#filmsAll[0], comments: this.#commentsAll}), bodyElement);
-  }
 }
 
