@@ -54,8 +54,7 @@ export default class FilmsPresenter {
   init() {
     this.#filmsAll = [...this.#filmsModel.films];
     this.#commentsAll = [...this.#filmsModel.comments];
-    render(this.#filmsContentComponent, this.#filmsContainer);
-    this.#renderFilmsList();
+    this.#renderFilmsContent();
   }
 
   #sortFilms(sortType) {
@@ -151,6 +150,11 @@ export default class FilmsPresenter {
       this.#renderFilmsListExtra(this.#filmsListCommentedComponent.element, SortType.MOST_COMMENTED);
       render(this.#filmsListCommentedComponent, this.#filmsContentComponent.element);
     }
+  }
+
+  #renderFilmsContent() {
+    render(this.#filmsContentComponent, this.#filmsContainer);
+    this.#renderFilmsList();
   }
 }
 
