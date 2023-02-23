@@ -11,10 +11,10 @@ export default class HeaderPresenter {
   }
 
   init() {
-    this.renderProfileRating();
+    this.#renderProfileRating();
   }
 
-  renderProfileRating() {
+  #renderProfileRating() {
     render (new ProfileView({rating: this.#getCountWatchedFilms()}), this.#container);
   }
 

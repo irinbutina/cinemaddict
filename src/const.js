@@ -10,24 +10,41 @@ const PROFILE_RATING = {
   FAN: 'Fan',
   MOVIE_BUFF: 'Movie Buff'
 };
+
+const FilterType = {
+  ALL: 'All movies',
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites',
+};
+
+
 const Filters = [
   {
-    title: 'All movies',
+    title: FilterType.ALL,
     link: 'all',
   },
   {
-    title: 'Watchlist',
+    title: FilterType.WATCHLIST,
     link: 'watchlist',
   },
   {
-    title: 'History',
+    title: FilterType.HISTORY,
     link: 'history',
   },
   {
-    title: 'Favorites',
+    title: FilterType.FAVORITES,
     link: 'favorites',
   },
 ];
+
+const LIST_EMPTY_TEXT = {
+  [FilterType.ALL]: 'There are no movies in our database',
+  [FilterType.WATCHLIST]: 'There are no movies to watch now',
+  [FilterType.HISTORY]: 'There are no watched movies now',
+  [FilterType.FAVORITES]: 'There are no favorite movies now',
+};
+
 
 const SortType = {
   TOP_RATED: 'Top rated',
@@ -35,5 +52,5 @@ const SortType = {
 };
 
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters, SortType };
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters, FilterType, LIST_EMPTY_TEXT, SortType };
 

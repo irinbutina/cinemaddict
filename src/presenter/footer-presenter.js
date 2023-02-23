@@ -15,6 +15,6 @@ export default class FooterPresenter {
   }
 
   #renderFooterStatistics() {
-    render (new FooterStatisticsView({countfilms: this.#filmsModel.films.length}), this.#container);
+    render (new FooterStatisticsView({countFilms: this.#filmsModel.films.length}), this.#container);
   }
 }
