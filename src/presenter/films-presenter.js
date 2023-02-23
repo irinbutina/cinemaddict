@@ -61,12 +61,17 @@ export default class FilmsPresenter {
     }
   }
 
+  #renderFilm(film, container){
+    const filmComponent = new FilmCardView({film});
+    render(filmComponent, container);
+  }
+
   #renderFilmsListAll() {
     const filmsListAllContainerComponent = new FilmsListContainerView();
     render (filmsListAllContainerComponent, this.#filmsListAllComponent.element);
 
     for (let i = 0; i < this.#filmsAll.length; i++) {
-      render(new FilmCardView({film: this.#filmsAll[i]}), filmsListAllContainerComponent.element);
+      this.#renderFilm(this.#filmsAll[i], filmsListAllContainerComponent.element);
     }
     render (this.#showMoreButtonComponent, this.#filmsListAllComponent.element);
   }
@@ -75,7 +80,7 @@ export default class FilmsPresenter {
     const filmsListExtraContainerComponent = new FilmsListContainerView();
     render (filmsListExtraContainerComponent, container);
     for (let i = 0; i < CardCount.EXTRA; i++) {
-      render(new FilmCardView({film: this.#sortFilms(sortType)[i]}), filmsListExtraContainerComponent.element);
+      this.#renderFilm(this.#sortFilms(sortType)[i], filmsListExtraContainerComponent.element);
     }
   }
 
