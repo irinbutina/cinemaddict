@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { generateFilters } from '../utils/filters.js';
+// import { generateFilters } from '../mock.js/filter.js';
 
 
 const createFilterItemTemplate = (filter, isActive) => {
@@ -9,24 +9,21 @@ const createFilterItemTemplate = (filter, isActive) => {
   <a href="#${filterlink}" class="main-navigation__item ${ isActive ? 'main-navigation__item--active' : ''}">${filterTitle} ${isCount}</a>`);
 };
 
-const createFiltersTemplate = (films) => {
-  const filters = generateFilters(films);
-  return filters.map((filter, i) => createFilterItemTemplate(filter, i === 0)).join('\n');
-};
+const createFiltersTemplate = (filters) => filters.map((filter, i) => createFilterItemTemplate(filter, i === 0)).join('\n');
 
-const createNavigationTemplate = (films) =>`<nav class="main-navigation">
-${createFiltersTemplate(films)}
+const createNavigationTemplate = (filters) =>`<nav class="main-navigation">
+${createFiltersTemplate(filters)}
 </nav>`;
 
 export default class FiltersView extends AbstractView {
-  #films = null;
+  #filters = null;
 
-  constructor({films}) {
+  constructor({filters}) {
     super();
-    this.#films = films;
+    this.#filters = filters;
   }
 
   get template() {
-    return createNavigationTemplate(this.#films);
+    return createNavigationTemplate(this.#filters);
   }
 }

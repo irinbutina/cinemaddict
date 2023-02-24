@@ -1,3 +1,5 @@
+import { getFilterCountAll, getFilterCountFavorites, getFilterCountHistory, getFilterCountWatchlist } from './utils/filters.js';
+
 const COMMENTS_EMOTION = ['smile', 'sleeping', 'puke', 'angry'];
 
 const CardCount = {
@@ -23,18 +25,22 @@ const Filters = [
   {
     title: FilterType.ALL,
     link: 'all',
+    count: (films) => getFilterCountAll(films),
   },
   {
     title: FilterType.WATCHLIST,
     link: 'watchlist',
+    count: (films) => getFilterCountWatchlist(films),
   },
   {
     title: FilterType.HISTORY,
     link: 'history',
+    count: (films) => getFilterCountHistory(films),
   },
   {
     title: FilterType.FAVORITES,
     link: 'favorites',
+    count: (films) => getFilterCountFavorites(films)
   },
 ];
 
@@ -52,5 +58,5 @@ const SortType = {
 };
 
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, Filters, FilterType, LIST_EMPTY_TEXT, SortType };
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, Filters };
 
