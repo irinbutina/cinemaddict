@@ -67,38 +67,40 @@ export default class FilmsPresenter {
   }
 
   #renderFilm(film, container) {
-    const bodyElement = document.querySelector('body');
-    const filmComponent = new FilmCardView({ film });
-    const filmPopupComponent = new FilmDetailsView({ film, comments: this.#commentsAll });
-
-    const openPopup = () => {
-      bodyElement.classList.add('hide-overflow');
-      bodyElement.appendChild(filmPopupComponent.element);
-    };
-
-    const closePopup = () => {
-      bodyElement.classList.remove('hide-overflow');
-      bodyElement.removeChild(filmPopupComponent.element);
-    };
-
     const escKeyDownHandler = (evt) => {
       if (isEscKey(evt)) {
         evt.preventDefault();
-        closePopup();
+        closePopup.call(this);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
 
-    filmComponent.element.querySelector('.film-card__link').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      openPopup();
-      document.addEventListener('keydown', escKeyDownHandler);
+    const bodyElement = document.querySelector('body');
+    const filmComponent = new FilmCardView({
+      film,
+      onCardLinkClick: () => {
+        openPopup.call(this);
+        document.addEventListener('keydown', escKeyDownHandler);
+      },
+    });
+    const filmPopupComponent = new FilmDetailsView({
+      film,
+      comments: this.#commentsAll,
+      onPopupCloseButtonClick: () => {
+        closePopup.call(this);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
     });
 
-    filmPopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      closePopup();
-    });
+    function openPopup() {
+      bodyElement.classList.add('hide-overflow');
+      bodyElement.appendChild(filmPopupComponent.element);
+    }
+
+    function closePopup() {
+      bodyElement.classList.remove('hide-overflow');
+      bodyElement.removeChild(filmPopupComponent.element);
+    }
 
     render(filmComponent, container);
   }
