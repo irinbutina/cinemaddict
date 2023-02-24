@@ -2,13 +2,12 @@ import { render } from '../framework/render';
 import FilmsContentView from '../view/films-content-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view';
-import FilmCardView from '../view/film-card-view.js';
-import FilmDetailsView from '../view/film-details-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
 import { CardCount, FilterType, SortType } from '../const';
-import { isEscKey, sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
+import { sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
 import ListEmptyView from '../view/list-empty-view';
+import FilmPresenter from './film-presenter';
 
 const FilmsListTitle = {
   ALL: 'All movies. Upcoming',
@@ -67,42 +66,8 @@ export default class FilmsPresenter {
   }
 
   #renderFilm(film, container) {
-    const escKeyDownHandler = (evt) => {
-      if (isEscKey(evt)) {
-        evt.preventDefault();
-        closePopup.call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const bodyElement = document.querySelector('body');
-    const filmComponent = new FilmCardView({
-      film,
-      onCardLinkClick: () => {
-        openPopup.call(this);
-        document.addEventListener('keydown', escKeyDownHandler);
-      },
-    });
-    const filmPopupComponent = new FilmDetailsView({
-      film,
-      comments: this.#commentsAll,
-      onPopupCloseButtonClick: () => {
-        closePopup.call(this);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-    });
-
-    function openPopup() {
-      bodyElement.classList.add('hide-overflow');
-      bodyElement.appendChild(filmPopupComponent.element);
-    }
-
-    function closePopup() {
-      bodyElement.classList.remove('hide-overflow');
-      bodyElement.removeChild(filmPopupComponent.element);
-    }
-
-    render(filmComponent, container);
+    const filmPresenter = new FilmPresenter({containerList: container});
+    filmPresenter.init(film, this.#commentsAll);
   }
 
   #renderFilmsListAll() {
