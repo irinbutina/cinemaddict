@@ -4,18 +4,10 @@ import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import { CardCount, FilterType, SortType } from '../const';
+import { CardCount, FilterType, SortType, FILM_COUNT_PER_STEP, FilmsListTitle } from '../const';
 import { sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
 import ListEmptyView from '../view/list-empty-view';
 import FilmPresenter from './film-presenter';
-
-const FilmsListTitle = {
-  ALL: 'All movies. Upcoming',
-  TOP: 'Top rated',
-  COMMENTED: 'Most commented'
-};
-
-const FILM_COUNT_PER_STEP = 5;
 
 export default class FilmsPresenter {
   #filmsContainer = null;
@@ -38,7 +30,7 @@ export default class FilmsPresenter {
   });
 
   #filmsListCommentedComponent = new FilmsListView({
-    extra: 'films-list--extra',
+    extra: true,
     title: FilmsListTitle.COMMENTED
   });
 

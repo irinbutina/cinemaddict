@@ -57,6 +57,14 @@ const SortType = {
   MOST_COMMENTED: 'Most commented'
 };
 
+const FILM_COUNT_PER_STEP = 5;
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, Filters };
+const FilmsListTitle = {
+  ALL: 'All movies. Upcoming',
+  TOP: 'Top rated',
+  COMMENTED: 'Most commented'
+};
+
+
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, Filters, FILM_COUNT_PER_STEP, FilmsListTitle };
 
