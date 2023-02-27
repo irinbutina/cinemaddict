@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { commentsList } from './comment.js';
 import { AGE_RATINGS, COUNTRIES, DESCRIPTION_TEXT, FILMS, GENRES, MaxCount, MinCount, teamFilm } from './const.js';
 import { getRandomArrayElement, getRandomArrayElements, getRandomBoolean, getRandomInteger } from './random.js';
@@ -50,5 +51,10 @@ const generateCard = () => {
   };
 };
 
-export {generateCard};
+const generateCardWithId = () => ({
+  id: nanoid(),
+  ...generateCard(),
+});
+
+export {generateCardWithId};
 

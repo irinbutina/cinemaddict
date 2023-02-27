@@ -1,4 +1,4 @@
-import { render } from '../framework/render';
+import { remove, render } from '../framework/render';
 import FilmsContentView from '../view/films-content-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view';
@@ -17,6 +17,7 @@ export default class FilmsPresenter {
   #commentsAll = [];
 
   #renderedFilmsCount = FILM_COUNT_PER_STEP;
+  #filmsPresenters = new Map();
 
   #filmsContentComponent = new FilmsContentView();
   #filmsListAllComponent = new FilmsListView({
@@ -60,6 +61,14 @@ export default class FilmsPresenter {
   #renderFilm(film, container) {
     const filmPresenter = new FilmPresenter({containerList: container});
     filmPresenter.init(film, this.#commentsAll);
+    this.#filmsPresenters.set(film.id, filmPresenter);
+  }
+
+  #clearFilmsList() {
+    this.#filmsPresenters.forEach((presenter) => presenter.destroy());
+    this.#filmsPresenters.clear();
+    this.#renderedFilmsCount = FILM_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
   }
 
   #renderFilmsListAll() {

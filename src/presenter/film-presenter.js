@@ -1,9 +1,13 @@
-import { render } from '../framework/render';
+import { render, remove, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 
 import { isEscKey } from '../utils/utils';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
 export default class FilmPresenter {
   #containerList = null;
@@ -23,6 +27,10 @@ export default class FilmPresenter {
     this.#film = film;
     this.#commentsAll = commentsAll;
 
+    const prevFilmComponent = this.#filmComponent;
+    const prevFilmPopupComponent = this.#filmPopupComponent;
+
+
     this.#filmComponent = new FilmCardView({
       film: this.#film,
       onCardLinkClick: this.#handleCardLinkClick
@@ -34,7 +42,26 @@ export default class FilmPresenter {
       onPopupCloseButtonClick: this.#handlePopupCloseButtonClick,
     });
 
-    render(this.#filmComponent, this.#containerList);
+    if (prevFilmComponent === null || prevFilmPopupComponent === null) {
+      render(this.#filmComponent, this.#containerList);
+      return;
+    }
+
+    if (this.#containerList.contains(prevFilmComponent.element)) {
+      replace(this.#filmComponent, prevFilmComponent);
+    }
+
+    if (this.#bodyElement.contains(prevFilmPopupComponent.element)) {
+      replace(this.#filmPopupComponent, prevFilmPopupComponent);
+    }
+
+    remove(prevFilmComponent);
+    remove(prevFilmPopupComponent);
+  }
+
+  destroy() {
+    remove(this.#filmComponent);
+    remove(this.#filmPopupComponent);
   }
 
   #handleCardLinkClick = () => {
