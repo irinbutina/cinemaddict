@@ -58,8 +58,15 @@ export default class FilmsPresenter {
     }
   }
 
+  #handleModeChange = () => {
+    this.#filmsPresenters.forEach((presenter) => presenter.resetView())
+  };
+
   #renderFilm(film, container) {
-    const filmPresenter = new FilmPresenter({containerList: container});
+    const filmPresenter = new FilmPresenter({
+      containerList: container,
+      onModeChange: this.#handleModeChange,
+    });
     filmPresenter.init(film, this.#commentsAll);
     this.#filmsPresenters.set(film.id, filmPresenter);
   }

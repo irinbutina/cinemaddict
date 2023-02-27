@@ -6,21 +6,26 @@ import { isEscKey } from '../utils/utils';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
+  POPUP: 'POPUP',
 };
 
 export default class FilmPresenter {
   #containerList = null;
   #filmComponent = null;
   #filmPopupComponent = null;
+  #handleModeChange = null;
 
   #film = null;
   #commentsAll = null;
+  #mode = Mode.DEFAULT;
+
   #bodyElement = document.querySelector('body');
 
 
-  constructor({containerList}) {
+  constructor({containerList, onModeChange}) {
     this.#containerList = containerList;
+    this.#handleModeChange = onModeChange;
+
   }
 
   init(film, commentsAll) {
@@ -47,11 +52,11 @@ export default class FilmPresenter {
       return;
     }
 
-    if (this.#containerList.contains(prevFilmComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#filmComponent, prevFilmComponent);
     }
 
-    if (this.#bodyElement.contains(prevFilmPopupComponent.element)) {
+    if (this.#mode === Mode.POPUP) {
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
     }
 
@@ -62,6 +67,12 @@ export default class FilmPresenter {
   destroy() {
     remove(this.#filmComponent);
     remove(this.#filmPopupComponent);
+  }
+
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#closePopup();
+    }
   }
 
   #handleCardLinkClick = () => {
@@ -76,12 +87,15 @@ export default class FilmPresenter {
     this.#bodyElement.classList.add('hide-overflow');
     this.#bodyElement.appendChild(this.#filmPopupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.POPUP;
   }
 
   #closePopup() {
     this.#bodyElement.classList.remove('hide-overflow');
     this.#bodyElement.removeChild(this.#filmPopupComponent.element);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeyDownHandler = (evt) => {
