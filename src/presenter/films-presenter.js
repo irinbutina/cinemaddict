@@ -5,7 +5,7 @@ import FilmsListContainerView from '../view/films-list-container-view';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
 import { CardCount, FilterType, SortType, FILM_COUNT_PER_STEP, FilmsListTitle } from '../const';
-import { sortFilmsByCommented, sortFilmsByRated } from '../utils/utils';
+import { sortFilmsByCommented, sortFilmsByRated, updateItem } from '../utils/utils';
 import ListEmptyView from '../view/list-empty-view';
 import FilmPresenter from './film-presenter';
 
@@ -59,15 +59,24 @@ export default class FilmsPresenter {
   }
 
   #handleModeChange = () => {
-    this.#filmsPresenters.forEach((presenter) => presenter.resetView())
+    this.#filmsPresenters.forEach((presenter) => presenter.resetView());
   };
+
+  #handleFilmChange = (updatedFilm) => {
+    this.#filmsAll = updateItem(this.#filmsAll, updatedFilm);
+    this.#filmsPresenters.get(updatedFilm.id).init(updatedFilm);
+  };
+
 
   #renderFilm(film, container) {
     const filmPresenter = new FilmPresenter({
       containerList: container,
+      commentsAll: this.#commentsAll,
+      onDataChange: this.#handleFilmChange,
       onModeChange: this.#handleModeChange,
     });
-    filmPresenter.init(film, this.#commentsAll);
+
+    filmPresenter.init(film);
     this.#filmsPresenters.set(film.id, filmPresenter);
   }
 
@@ -108,7 +117,7 @@ export default class FilmsPresenter {
     const filmsListExtraContainerComponent = new FilmsListContainerView();
     render(filmsListExtraContainerComponent, container);
     for (let i = 0; i < CardCount.EXTRA; i++) {
-      this.#renderFilm(this.#sortFilms(sortType)[i], filmsListExtraContainerComponent.element);
+      // this.#renderFilm(this.#sortFilms(sortType)[i], filmsListExtraContainerComponent.element);
     }
   }
 

@@ -41,11 +41,11 @@ const createEmojiListTemplate = () => (`<div class="film-details__emoji-list">
 ${createEmojiTemplate()}
 </div>`);
 
-const createFilmDetailsTemplate = (film, comments) => {
-  const { commentsID, filmInfo, userDetails } = film;
-  const commentsFilm = comments.filter((comment) => commentsID.includes(comment.id));
+const createFilmDetailsTemplate = (film, commentsFilm) => {
+  const { filmInfo, userDetails } = film;
+  // const commentsFilm = comments.filter((comment) => commentsID.includes(comment.id));
   const { title, alternativeTitle, rating, ageRating, release, duration, genre, poster, description, director, writers, actors, } = filmInfo;
-  const { watchlist, alreadyWatched, favorite } = userDetails;
+  const { isWatchlist, isHistory, isFavorite } = userDetails;
   const { releaseDate, releaseCountry } = release;
   const writersByWorld = splitByWords(writers);
   const actorsByWorld = splitByWords(actors);
@@ -119,9 +119,9 @@ const createFilmDetailsTemplate = (film, comments) => {
     </div>
 
     <section class="film-details__controls">
-      <button type="button" class="film-details__control-button film-details__control-button--watchlist ${isActive(watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
-      <button type="button" class="film-details__control-button film-details__control-button--watched ${isActive(alreadyWatched)}" id="watched" name="watched">Already watched</button>
-      <button type="button" class="film-details__control-button film-details__control-button--favorite ${isActive(favorite)}" id="favorite" name="favorite">Add to favorites</button>
+      <button type="button" class="film-details__control-button film-details__control-button--watchlist ${isActive(isWatchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
+      <button type="button" class="film-details__control-button film-details__control-button--watched ${isActive(isHistory)}" id="watched" name="watched">Already watched</button>
+      <button type="button" class="film-details__control-button film-details__control-button--favorite ${isActive(isFavorite)}" id="favorite" name="favorite">Add to favorites</button>
     </section>
   </div>
 
@@ -147,23 +147,55 @@ const createFilmDetailsTemplate = (film, comments) => {
 
 export default class FilmDetailsView extends AbstractView {
   #film = null;
-  #comments = null;
+  #commentsFilm = null;
   #handlePopupCloseButton = null;
+  #handleWatchlistClick = null;
+  #handleHistoryClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({ film, comments, onPopupCloseButtonClick }) {
+  constructor({ film, commentsFilm, onPopupCloseButtonClick, onWatchlistClick, onHistoryClick, onFavoriteClick}) {
     super();
     this.#film = film;
-    this.#comments = comments;
+    this.#commentsFilm = commentsFilm;
     this.#handlePopupCloseButton = onPopupCloseButtonClick;
+    this.#handleWatchlistClick = onWatchlistClick;
+    this.#handleHistoryClick = onHistoryClick;
+    this.#handleFavoriteClick = onFavoriteClick;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this. #popupCloseButtonClickHandler);
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#cardWatchlistHandler);
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#cardHistoryHandler);
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#cardFavoriteHandler);
   }
 
   get template() {
-    return createFilmDetailsTemplate(this.#film, this.#comments);
+    return createFilmDetailsTemplate(this.#film, this.#commentsFilm);
   }
+
+  // get scrollPosition() {
+  //   return this.element.scrollTop;
+  // }
 
   #popupCloseButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handlePopupCloseButton();
   };
+
+  #cardWatchlistHandler = (evt) => {
+    // console.log('watchlist')
+    evt.preventDefault();
+    this.#handleWatchlistClick();
+  };
+
+  #cardHistoryHandler = (evt) => {
+    // console.log('history')
+    evt.preventDefault();
+    this.#handleHistoryClick();
+  };
+
+  #cardFavoriteHandler = (evt) => {
+    // console.log('favorit')
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
+
 }

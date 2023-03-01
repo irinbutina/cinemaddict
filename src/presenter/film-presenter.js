@@ -2,8 +2,10 @@ import { render, remove, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 
-import { isEscKey } from '../utils/utils';
+import { getCommentsFilm, isEscKey } from '../utils/utils';
 
+
+const bodyElement = document.querySelector('body');
 const Mode = {
   DEFAULT: 'DEFAULT',
   POPUP: 'POPUP',
@@ -13,46 +15,51 @@ export default class FilmPresenter {
   #containerList = null;
   #filmComponent = null;
   #filmPopupComponent = null;
+  #handleDataChange = null;
   #handleModeChange = null;
 
   #film = null;
   #commentsAll = null;
+  #commentsFilm = null;
   #mode = Mode.DEFAULT;
 
-  #bodyElement = document.querySelector('body');
 
-
-  constructor({containerList, onModeChange}) {
+  constructor({containerList, commentsAll, onDataChange, onModeChange}) {
     this.#containerList = containerList;
+    this.#commentsAll = commentsAll;
+    this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
 
   }
 
-  init(film, commentsAll) {
+  init(film) {
     this.#film = film;
-    this.#commentsAll = commentsAll;
+    this.#commentsFilm = getCommentsFilm(this.#commentsAll, this.#film.commentsID);
 
     const prevFilmComponent = this.#filmComponent;
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
-
     this.#filmComponent = new FilmCardView({
       film: this.#film,
-      onCardLinkClick: this.#handleCardLinkClick
+      commentsFilm: this.#commentsFilm,
+      onCardLinkClick: this.#handleCardLinkClick,
+      onWatchlistClick: this.#handleWatchlistClick,
+      onHistoryClick: this.#handleHistoryClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#filmPopupComponent = new FilmDetailsView({
       film: this.#film,
-      comments: this.#commentsAll,
+      commentsFilm: this.#commentsFilm,
       onPopupCloseButtonClick: this.#handlePopupCloseButtonClick,
+      onWatchlistClick: this.#handleWatchlistClick,
+      onHistoryClick: this.#handleHistoryClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    if (prevFilmComponent === null || prevFilmPopupComponent === null) {
+    if (prevFilmComponent === null ) {
       render(this.#filmComponent, this.#containerList);
-      return;
-    }
-
-    if (this.#mode === Mode.DEFAULT) {
+    } else {
       replace(this.#filmComponent, prevFilmComponent);
     }
 
@@ -77,32 +84,67 @@ export default class FilmPresenter {
 
   #handleCardLinkClick = () => {
     this.#openPopup();
+    bodyElement.classList.add('hide-overflow');
   };
 
   #handlePopupCloseButtonClick = () => {
     this.#closePopup();
+    bodyElement.classList.remove('hide-overflow');
+  };
+
+
+  #handleWatchlistClick = () => {
+    this.#handleDataChange({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        isWatchlist : !this.#film.userDetails.isWatchlist
+      }
+    });
+  };
+
+  #handleHistoryClick = () => {
+    this.#handleDataChange({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        isHistory: !this.#film.userDetails.isHistory
+      }
+    });
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        isFavorite: !this.#film.userDetails.isFavorite
+      }
+    });
   };
 
   #openPopup() {
-    this.#bodyElement.classList.add('hide-overflow');
-    this.#bodyElement.appendChild(this.#filmPopupComponent.element);
+    bodyElement.appendChild(this.#filmPopupComponent.element);
+    bodyElement.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.POPUP;
   }
 
   #closePopup() {
-    this.#bodyElement.classList.remove('hide-overflow');
-    this.#bodyElement.removeChild(this.#filmPopupComponent.element);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
+    if (this.#filmPopupComponent) {
+      bodyElement.removeChild(this.#filmPopupComponent.element);
+      bodyElement.classList.remove('hide-overflow');
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+      this.#mode = Mode.DEFAULT;
+    }
   }
 
   #escKeyDownHandler = (evt) => {
     if (isEscKey(evt)) {
       evt.preventDefault();
       this.#closePopup();
-      // document.removeEventListener('keydown', this.#escKeyDownHandler);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 

@@ -18,3 +18,6 @@ export const getProfileRating = (rating) => {
 export const sortFilmsByCommented = (a, b) => b.commentsID.length - a.commentsID.length;
 
 export const sortFilmsByRated = (a, b) => b.filmInfo.rating - a.filmInfo.rating;
+
+export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+export const getCommentsFilm = (allComments, commentsID) => allComments.filter((comment) => commentsID.includes(comment.id));

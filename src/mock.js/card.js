@@ -43,10 +43,10 @@ const generateCard = () => {
       description,
     },
     userDetails: {
-      watchlist: getRandomBoolean(),
-      alreadyWatched: getRandomBoolean(),
+      isWatchlist: getRandomBoolean(),
+      isHistory: getRandomBoolean(),
       watchingDate: dayjs(),
-      favorite: getRandomBoolean(),
+      isFavorite: getRandomBoolean(),
     }
   };
 };
