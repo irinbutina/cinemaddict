@@ -171,29 +171,22 @@ export default class FilmDetailsView extends AbstractView {
     return createFilmDetailsTemplate(this.#film, this.#commentsFilm);
   }
 
-  // get scrollPosition() {
-  //   return this.element.scrollTop;
-  // }
-
   #popupCloseButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#handlePopupCloseButton();
   };
 
   #cardWatchlistHandler = (evt) => {
-    // console.log('watchlist')
     evt.preventDefault();
     this.#handleWatchlistClick();
   };
 
   #cardHistoryHandler = (evt) => {
-    // console.log('history')
     evt.preventDefault();
     this.#handleHistoryClick();
   };
 
   #cardFavoriteHandler = (evt) => {
-    // console.log('favorit')
     evt.preventDefault();
     this.#handleFavoriteClick();
   };

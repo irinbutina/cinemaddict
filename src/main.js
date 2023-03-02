@@ -1,5 +1,5 @@
 import FiltersView from './view/filters-view.js';
-import SortView from './view/sort-view.js';
+// import SortView from './view/sort-view.js';
 import FilmsModel from './model/films-model.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import { render } from './framework/render.js';
@@ -34,7 +34,7 @@ const footerPresenter = new FooterPresenter ({
 headerPresenter.init();
 
 render (new FiltersView({filters}), siteMainElement);
-render (new SortView(), siteMainElement);
+// render (new SortView(), siteMainElement);
 
 filmsPresenter.init();
 
