@@ -94,8 +94,11 @@ export default class FilmsPresenter {
   //   }
   // }
 
+
   #handleModeChange = () => {
-    this.#filmsPresenters.forEach((presenter) => presenter.resetView());
+    this.#filmsPresenters.forEach((presenter) => {
+      presenter.resetView();
+    });
   };
 
   #handleFilmChange = (updatedFilm) => {

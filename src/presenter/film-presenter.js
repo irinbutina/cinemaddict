@@ -83,13 +83,14 @@ export default class FilmPresenter {
   }
 
   #handleCardLinkClick = () => {
+    if (bodyElement.contains(this.#filmPopupComponent.element)) {
+      return;
+    }
     this.#openPopup();
-    bodyElement.classList.add('hide-overflow');
   };
 
   #handlePopupCloseButtonClick = () => {
     this.#closePopup();
-    bodyElement.classList.remove('hide-overflow');
   };
 
 
@@ -125,19 +126,18 @@ export default class FilmPresenter {
 
   #openPopup() {
     bodyElement.appendChild(this.#filmPopupComponent.element);
-    bodyElement.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.POPUP;
+    bodyElement.classList.add('hide-overflow');
   }
 
   #closePopup() {
-    if (this.#filmPopupComponent) {
-      bodyElement.removeChild(this.#filmPopupComponent.element);
-      bodyElement.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-      this.#mode = Mode.DEFAULT;
-    }
+    bodyElement.removeChild(this.#filmPopupComponent.element);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+    bodyElement.classList.remove('hide-overflow');
+
   }
 
   #escKeyDownHandler = (evt) => {
