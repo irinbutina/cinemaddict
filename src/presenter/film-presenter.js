@@ -55,6 +55,8 @@ export default class FilmPresenter {
       onWatchlistClick: this.#handleWatchlistClick,
       onHistoryClick: this.#handleHistoryClick,
       onFavoriteClick: this.#handleFavoriteClick,
+      onCommentsAdd: this.#handleCommentsAdd,
+      onCommentDelete: this.#handleCommentsDelete
     });
 
     if (prevFilmComponent === null ) {
@@ -78,6 +80,7 @@ export default class FilmPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#filmPopupComponent.reset(this.#film);
       this.#closePopup();
     }
   }
@@ -90,6 +93,7 @@ export default class FilmPresenter {
   };
 
   #handlePopupCloseButtonClick = () => {
+    this.#filmPopupComponent.reset(this.#film);
     this.#closePopup();
   };
 
@@ -124,6 +128,14 @@ export default class FilmPresenter {
     });
   };
 
+  #handleCommentsAdd = () => {
+    console.log('submit')
+  };
+
+  #handleCommentsDelete = () => {
+    console.log('delete')
+  };
+
   #openPopup() {
     bodyElement.appendChild(this.#filmPopupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -143,6 +155,7 @@ export default class FilmPresenter {
   #escKeyDownHandler = (evt) => {
     if (isEscKey(evt)) {
       evt.preventDefault();
+      this.#filmPopupComponent.reset(this.#film);
       this.#closePopup();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
