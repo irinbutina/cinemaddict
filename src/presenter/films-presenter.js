@@ -101,7 +101,7 @@ export default class FilmsPresenter {
     });
   };
 
-  #handleFilmChange = (updatedFilm) => {
+  #handleDataChange = (updatedFilm) => {
     this.#filmsAll = updateItem(this.#filmsAll, updatedFilm);
     this.#sourcedFilmsAll = updateItem(this.#sourcedFilmsAll, updatedFilm);
     this.#filmsPresenters.get(updatedFilm.id).init(updatedFilm);
@@ -120,7 +120,7 @@ export default class FilmsPresenter {
     const filmPresenter = new FilmPresenter({
       containerList: container,
       commentsAll: this.#commentsAll,
-      onDataChange: this.#handleFilmChange,
+      onDataChange: this.#handleDataChange,
       onModeChange: this.#handleModeChange,
     });
 

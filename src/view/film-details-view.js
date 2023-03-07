@@ -178,10 +178,12 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this._setState(FilmDetailsView.parseCardToState(film));
     this.#film = film;
     this.#commentsFilm = commentsFilm;
-    // this._setState(this.#newCommentState);
 
-    console.log(this.#film)
-    console.log(this._state)
+  //   console.log(this.#film)
+  //   console.log(this._state)
+
+  // console.log(this.updateElement)
+
 
     this.#handlePopupCloseButton = onPopupCloseButtonClick;
     this.#handleWatchlistClick = onWatchlistClick;
@@ -194,8 +196,22 @@ export default class FilmDetailsView extends AbstractStatefulView {
   }
 
   get template() {
-    // const {emoji, commentText} = this._state;
     return createFilmDetailsTemplate(this._state, this.#commentsFilm);
+  }
+
+  get scrollPosition() {
+    return this.element.scrollTop;
+  }
+
+  scrollPopup(scrollPosition) {
+    this.element.scrollTo(0, scrollPosition);
+  }
+
+
+  updateElement(update) {
+    const currentPosition = this.scrollPosition;
+    super.updateElement(update);
+    this.scrollPopup(currentPosition);
   }
 
   reset(film) {
@@ -205,28 +221,29 @@ export default class FilmDetailsView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    const commentInputElement = this.element.querySelector('.film-details__comment-input');
-    const commentListElement = this.element.querySelector('.film-details__comments-list');
+    this.#setInnerHandlers();
+  }
 
-    const deleteBtns = commentListElement.querySelectorAll('.film-details__comment-delete');
-    // console.log(deleteBtns)
-
+  #setInnerHandlers() {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#popupCloseButtonClickHandler);
+
+    const commentInputElement = this.element.querySelector('.film-details__comment-input');
 
     this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#cardWatchlistHandler);
     this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#cardHistoryHandler);
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#cardFavoriteHandler);
 
-    commentInputElement.addEventListener('input', this.#textCommentHandler);
+    if (this.#commentsFilm.length > 0) {
+      this.element.querySelectorAll('.film-details__comment-delete').forEach((btn) => btn.addEventListener('click', this.#deleteCommentHandler));
+    }
 
     commentInputElement.addEventListener('keydown', this.#addCommentHandler);
 
-    if (this.#commentsFilm.length > 0) {
-      Array.from(deleteBtns).forEach((btn) => btn.addEventListener('click', this.#deleteCommentHandler));
-    }
+    commentInputElement.addEventListener('input', this.#textCommentHandler);
 
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#changeEmojiHandler);
   }
+
 
   #changeEmojiHandler = (evt) => {
     evt.preventDefault();
@@ -237,12 +254,12 @@ export default class FilmDetailsView extends AbstractStatefulView {
         emoji: evt.target.value,
       }
     });
-    console.log(this._state)
   };
 
   #addCommentHandler = (evt) => {
     if (evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
       evt.preventDefault();
+      // this.#handleCommentAdd();
       console.log('addCommentHandler')
     }
   };
@@ -283,7 +300,10 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #cardFavoriteHandler = (evt) => {
     evt.preventDefault();
+    const currentPosition = this.scrollPosition;
+    console.log(currentPosition)
     this.#handleFavoriteClick();
+    this.scrollPopup(currentPosition);
   };
 
   static parseCardToState(film) {
