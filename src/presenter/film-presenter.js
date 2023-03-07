@@ -99,6 +99,7 @@ export default class FilmPresenter {
 
 
   #handleWatchlistClick = () => {
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
     this.#handleDataChange({
       ...this.#film,
       userDetails: {
@@ -106,9 +107,11 @@ export default class FilmPresenter {
         isWatchlist : !this.#film.userDetails.isWatchlist
       }
     });
+    this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleHistoryClick = () => {
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
     this.#handleDataChange({
       ...this.#film,
       userDetails: {
@@ -116,9 +119,11 @@ export default class FilmPresenter {
         isHistory: !this.#film.userDetails.isHistory
       }
     });
+    this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleFavoriteClick = () => {
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
     this.#handleDataChange({
       ...this.#film,
       userDetails: {
@@ -126,6 +131,7 @@ export default class FilmPresenter {
         isFavorite: !this.#film.userDetails.isFavorite
       }
     });
+    this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleCommentsAdd = () => {

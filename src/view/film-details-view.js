@@ -179,12 +179,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.#film = film;
     this.#commentsFilm = commentsFilm;
 
-  //   console.log(this.#film)
-  //   console.log(this._state)
-
-  // console.log(this.updateElement)
-
-
     this.#handlePopupCloseButton = onPopupCloseButtonClick;
     this.#handleWatchlistClick = onWatchlistClick;
     this.#handleHistoryClick = onHistoryClick;
@@ -301,7 +295,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
   #cardFavoriteHandler = (evt) => {
     evt.preventDefault();
     const currentPosition = this.scrollPosition;
-    console.log(currentPosition)
     this.#handleFavoriteClick();
     this.scrollPopup(currentPosition);
   };
