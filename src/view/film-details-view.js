@@ -47,7 +47,6 @@ ${createEmojiTemplate(currentSmile)}
 </div>`);
 
 const createNewCommentTemplate = (newComment) => {
-  console.log(newComment)
   const { emoji, commentText } = newComment;
   const isEmoji = emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">` : '';
   const isCommentText = commentText ? commentText : '';
@@ -267,7 +266,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
         commentText: evt.target.value,
       }
     });
-    console.log(this._state)
+    // console.log(this._state)
   };
 
   #deleteCommentHandler = (evt) => {

@@ -1,18 +1,14 @@
+import Observable from '../framework/observable.js';
 import { generateCardWithId } from '../mock.js/card.js';
-import { commentsList } from '../mock.js/comment.js';
 
-const FILMS_COUNT = 2;
+const FILMS_COUNT = 22;
 
-export default class FilmsModel {
+export default class FilmsModel extends Observable {
   #films = Array.from({length: FILMS_COUNT}, generateCardWithId);
-  #comments = commentsList;
 
   get films() {
     // console.log(this.#films)
     return this.#films;
   }
 
-  get comments() {
-    return this.#comments;
-  }
 }

@@ -6,6 +6,7 @@ import { render } from './framework/render.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FooterPresenter from './presenter/footer-presenter.js';
 import { generateFilter } from './mock.js/filter.js';
+import CommentsModel from './model/comments-model.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -13,12 +14,14 @@ const siteFooterElement = document.querySelector('.footer');
 const footerStatisticsContainer = siteFooterElement.querySelector('.footer__statistics');
 
 const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel();
 
 const filters = generateFilter(filmsModel.films);
 
 const filmsPresenter = new FilmsPresenter({
   filmsContainer: siteMainElement,
-  filmsModel
+  filmsModel,
+  commentsModel
 });
 
 const headerPresenter = new HeaderPresenter({
