@@ -3,6 +3,7 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 
 import { getCommentsFilm, isEscKey } from '../utils/utils';
+import { UpdateType, UserAction } from '../const';
 
 
 const bodyElement = document.querySelector('body');
@@ -100,37 +101,46 @@ export default class FilmPresenter {
 
   #handleWatchlistClick = () => {
     const currentPosition = this.#filmPopupComponent.scrollPosition;
-    this.#handleDataChange({
-      ...this.#film,
-      userDetails: {
-        ...this.#film.userDetails,
-        isWatchlist : !this.#film.userDetails.isWatchlist
-      }
-    });
+    this.#handleDataChange(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      {
+        ...this.#film,
+        userDetails: {
+          ...this.#film.userDetails,
+          isWatchlist : !this.#film.userDetails.isWatchlist
+        }
+      });
     this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleHistoryClick = () => {
     const currentPosition = this.#filmPopupComponent.scrollPosition;
-    this.#handleDataChange({
-      ...this.#film,
-      userDetails: {
-        ...this.#film.userDetails,
-        isHistory: !this.#film.userDetails.isHistory
-      }
-    });
+    this.#handleDataChange(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      {
+        ...this.#film,
+        userDetails: {
+          ...this.#film.userDetails,
+          isHistory: !this.#film.userDetails.isHistory
+        }
+      });
     this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleFavoriteClick = () => {
     const currentPosition = this.#filmPopupComponent.scrollPosition;
-    this.#handleDataChange({
-      ...this.#film,
-      userDetails: {
-        ...this.#film.userDetails,
-        isFavorite: !this.#film.userDetails.isFavorite
-      }
-    });
+    this.#handleDataChange(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      {
+        ...this.#film,
+        userDetails: {
+          ...this.#film.userDetails,
+          isFavorite: !this.#film.userDetails.isFavorite
+        }
+      });
     this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 

@@ -71,6 +71,17 @@ const FilmsListTitle = {
   COMMENTED: 'Most commented'
 };
 
+const UserAction = {
+  UPDATE_FILM: 'UPDATE_FILM',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, SortTypeExtra, Filters, FILM_COUNT_PER_STEP, FilmsListTitle };
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, SortTypeExtra, Filters, FILM_COUNT_PER_STEP, FilmsListTitle, UserAction, UpdateType };
 
