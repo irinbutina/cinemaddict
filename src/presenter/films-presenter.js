@@ -28,6 +28,7 @@ export default class FilmsPresenter {
     title: FilmsListTitle.ALL
   });
 
+
   #filmsListExtraTopComponent = new FilmsListView({
     extra: true,
     title: FilmsListTitle.TOP
@@ -39,7 +40,9 @@ export default class FilmsPresenter {
   });
 
   #filmsListAllContainerComponent = new FilmsListContainerView();
+  #filmPresenter = null;
 
+  #listEmptyComponent = new ListEmptyView({filterType: FilterType.ALL});
 
   constructor({ filmsContainer, filmsModel, commentsModel }) {
     this.#filmsContainer = filmsContainer;
@@ -60,6 +63,10 @@ export default class FilmsPresenter {
     return this.#filmsModel.films;
   }
 
+  get comments() {
+    return this.#commentsModel.comments;
+  }
+
   // #getfilmsExtra(sortTypeExtra) {
   //   if (sortTypeExtra === SortTypeExtra.MOST_COMMENTED) {
   //     return this.#filmsModel.films.sort(sortFilmsByCommented).slice(0, CardCount.EXTRA);
@@ -69,13 +76,8 @@ export default class FilmsPresenter {
   //   }
   // }
 
-  get comments() {
-    return this.#commentsModel;
-  }
-
   init() {
-    this.#commentsAll = [...this.#commentsModel.comments];
-    this.#renderFilmsContent();
+    this.#renderFilmsBoard();
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -84,8 +86,8 @@ export default class FilmsPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearFilmsList();
-    this.#renderFilmsList();
+    this.#clearFilmsBoard({resetRenderedFilmsCount: true});
+    this.#renderFilmsBoard();
   };
 
   #handleModeChange = () => {
@@ -94,16 +96,7 @@ export default class FilmsPresenter {
     });
   };
 
-  // #handleDataChange = (updatedFilm) => {
-  //   this.#filmsPresenters.get(updatedFilm.id).init(updatedFilm);
-  // };
-
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this.#filmsModel.updateFilm (updateType, update);
@@ -118,30 +111,20 @@ export default class FilmsPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        console.log('UpdateType.PATCH')
         this.#filmsPresenters.get(data.id).init(data);
-        // this.#clearFilmsList();
-        // this.#renderFilmsListAll();
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
-          this.#clearFilmsList();
-        this.#renderFilmsListAll();
+        this.#clearFilmsBoard();
+        this.#renderFilmsBoard();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearFilmsBoard({resetRenderedFilmsCount: true, resetSortType: true});
+        this.#renderFilmsBoard();
         break;
     }
   };
-
 
   #renderSort() {
     this.#sortComponent = new SortView({
@@ -161,7 +144,6 @@ export default class FilmsPresenter {
 
   #handleShowMoreButtonClick = () => {
     const filmsCount = this.films.length;
-    console.log(this.films)
     const newRenderedFilmsCount = Math.min(filmsCount, this.#renderedFilmsCount + FILM_COUNT_PER_STEP);
     const films = this.films.slice(this.#renderedFilmsCount, newRenderedFilmsCount);
     this.#renderFilms(films);
@@ -175,11 +157,10 @@ export default class FilmsPresenter {
   #renderFilm(film, container) {
     const filmPresenter = new FilmPresenter({
       containerList: container,
-      commentsAll: this.#commentsAll,
+      commentsAll: this.comments,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
-
     filmPresenter.init(film);
     this.#filmsPresenters.set(film.id, filmPresenter);
   }
@@ -189,14 +170,15 @@ export default class FilmsPresenter {
   }
 
   #renderFilmsListAll() {
-    const filmsCount = this.films.length;
-    const films = this.films.slice(0, Math.min(filmsCount, FILM_COUNT_PER_STEP));
+
+    const films = this.films;
+    const filmsCount = films.length;
 
     render(this.#filmsListAllContainerComponent, this.#filmsListAllComponent.element);
 
-    this.#renderFilms(films);
+    this.#renderFilms(films.slice(0, Math.min(filmsCount, this.#renderedFilmsCount)));
 
-    if (filmsCount > FILM_COUNT_PER_STEP) {
+    if (filmsCount > this.#renderedFilmsCount) {
       this.#renderShowMoreButton();
     }
   }
@@ -213,33 +195,71 @@ export default class FilmsPresenter {
     // }
   }
 
-  #renderFilmsList() {
-    if (this.films.length === 0) {
-      render(new ListEmptyView({filterType: FilterType.ALL}), this.#filmsContentComponent.element);
-    } else {
-      render(this.#filmsListAllComponent, this.#filmsContentComponent.element);
-      this.#renderFilmsListAll();
-
-      this.#renderFilmsListExtra(this.#filmsListExtraTopComponent.element, SortTypeExtra.TOP_RATED);
-      render(this.#filmsListExtraTopComponent, this.#filmsContentComponent.element);
-
-      this.#renderFilmsListExtra(this.#filmsListCommentedComponent.element, SortTypeExtra.MOST_COMMENTED);
-      render(this.#filmsListCommentedComponent, this.#filmsContentComponent.element);
-    }
+  #renderEmptyComponent() {
+    render(this.#listEmptyComponent, this.#filmsContentComponent.element);
   }
 
-  #renderFilmsContent() {
+  #renderFilmsList() {
+    const filmsCount = this.films.length;
+
+    if (filmsCount === 0) {
+      this.#renderEmptyComponent();
+      return;
+    }
+
+    render(this.#filmsListAllComponent, this.#filmsContentComponent.element);
+
+    this.#renderFilmsListAll();
+
+    // this.#renderFilmsListExtra(this.#filmsListExtraTopComponent.element, SortTypeExtra.TOP_RATED);
+    // render(this.#filmsListExtraTopComponent, this.#filmsContentComponent.element);
+
+    // this.#renderFilmsListExtra(this.#filmsListCommentedComponent.element, SortTypeExtra.MOST_COMMENTED);
+    // render(this.#filmsListCommentedComponent, this.#filmsContentComponent.element);
+  }
+
+  #renderFilmsBoard() {
     this.#renderSort();
+    console.log('renderFilmsBoard')
+    // console.log(this.#filmsContainer)
     render(this.#filmsContentComponent, this.#filmsContainer);
     this.#renderFilmsList();
   }
 
-  #clearFilmsList() {
+  #clearFilmsBoard({resetRenderedFilmsCount = false, resetSortType = false} = {}) {
+
+    const filmsCount = this.films.length;
+    console.log(filmsCount)
+
     this.#filmsPresenters.forEach((presenter) => presenter.destroy());
     this.#filmsPresenters.clear();
-    this.#renderedFilmsCount = FILM_COUNT_PER_STEP;
+
+    remove(this.#sortComponent);
+    remove(this.#listEmptyComponent);
     remove(this.#showMoreButtonComponent);
+
+    if (resetRenderedFilmsCount) {
+      console.log('renderedFilmsCount')
+      this.#renderedFilmsCount = FILM_COUNT_PER_STEP;
+    } else {
+      // На случай, если перерисовка доски вызвана
+      // уменьшением количества задач (например, удаление или перенос в архив)
+      // нужно скорректировать число показанных задач
+      this.#renderedFilmsCount = Math.min(filmsCount, this.#renderedFilmsCount);
+    }
+
+    if (resetSortType) {
+      console.log('resetSortType')
+      this.#currentSortType = SortType.DEFAULT;
+    }
   }
+
+  // #clearFilmsList() {
+  //   this.#filmsPresenters.forEach((presenter) => presenter.destroy());
+  //   this.#filmsPresenters.clear();
+  //   this.#renderedFilmsCount = FILM_COUNT_PER_STEP;
+  //   remove(this.#showMoreButtonComponent);
+  // }
 
 }
 

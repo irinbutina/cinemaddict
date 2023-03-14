@@ -11,7 +11,7 @@ import { COMMENTS_EMOTION } from '../const.js';
 const createGenreTemplate = (genres) => genres.map((genre) => `<span   class="film-details__genre">${genre}</span>`).join('\n');
 
 const createCommentsTemplate = (commentsFilm) => commentsFilm.map((comment) => {
-  const { author, commentText, date, emotion } = comment;
+  const { author, commentText, date, emotion, id } = comment;
   const commentDate = humanizeCommentsDate(date);
   return (
     `<li class="film-details__comment">
@@ -23,7 +23,7 @@ const createCommentsTemplate = (commentsFilm) => commentsFilm.map((comment) => {
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${commentDate}</span>
-            <button class="film-details__comment-delete" >Delete</button>
+            <button class="film-details__comment-delete" data-comment-id="${id}" >Delete</button>
           </p>
         </div>
       </li>`
@@ -232,13 +232,15 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
     commentInputElement.addEventListener('keydown', this.#addCommentHandler);
 
-    commentInputElement.addEventListener('input', this.#textCommentHandler);
+    commentInputElement.addEventListener('input', this.#inputTextCommentHandler);
 
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#changeEmojiHandler);
   }
 
 
+
   #changeEmojiHandler = (evt) => {
+    // console.log(this._state)
     evt.preventDefault();
     this.updateElement({
       ...this._state,
@@ -247,17 +249,10 @@ export default class FilmDetailsView extends AbstractStatefulView {
         emoji: evt.target.value,
       }
     });
+    // console.log(this._state)
   };
 
-  #addCommentHandler = (evt) => {
-    if (evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
-      evt.preventDefault();
-      // this.#handleCommentAdd();
-      console.log('addCommentHandler')
-    }
-  };
-
-  #textCommentHandler = (evt) => {
+  #inputTextCommentHandler = (evt) => {
     evt.preventDefault();
     this._setState({
       ...this._state,
@@ -269,10 +264,21 @@ export default class FilmDetailsView extends AbstractStatefulView {
     // console.log(this._state)
   };
 
+  #addCommentHandler = (evt) => {
+    if (evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
+      evt.preventDefault();
+      // this.#handleCommentAdd();
+      console.log('addCommentHandler')
+    }
+  };
+
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
-
-
+    this.#handleCommentDelete({
+      id: evt.target.dataset.commentId,
+      film: this.#film,
+    });
+    console.log(evt.target.dataset.commentId)
     console.log('deleteCommentHandler')
   };
 
@@ -293,12 +299,11 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #cardFavoriteHandler = (evt) => {
     evt.preventDefault();
-    const currentPosition = this.scrollPosition;
     this.#handleFavoriteClick();
-    this.scrollPopup(currentPosition);
   };
 
   static parseCardToState(film) {
+    // console.log(film)
     return {
       ...film,
       newComment: {
@@ -327,12 +332,13 @@ export default class FilmDetailsView extends AbstractStatefulView {
   //   };
   // }
 
-  // static parseStateToCard(state) {
-  //   const film = {
-  //     ...state,
-  //   };
+  static parseStateToCard(state) {
+    const film = {
+      ...state,
+    };
 
-  //   delete film.newComment;
-  //   return film;
-  // }
+    delete film.newComment;
+
+    return film;
+  }
 }

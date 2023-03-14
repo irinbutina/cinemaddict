@@ -1,12 +1,12 @@
 import FiltersView from './view/filters-view.js';
 // import SortView from './view/sort-view.js';
 import FilmsModel from './model/films-model.js';
+import CommentsModel from './model/comments-model.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import { render } from './framework/render.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FooterPresenter from './presenter/footer-presenter.js';
 import { generateFilter } from './mock.js/filter.js';
-import CommentsModel from './model/comments-model.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -15,6 +15,7 @@ const footerStatisticsContainer = siteFooterElement.querySelector('.footer__stat
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
+console.log
 
 const filters = generateFilter(filmsModel.films);
 

@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomInteger } from './random.js';
 import { COMMENTS_EMOTION } from '../const.js';
 
-const COMMENTS_COUNT = 5;
+const COMMENTS_COUNT = 10;
 
 const COMMENTS_AUTORS = [
   'Lilly Sanchez',

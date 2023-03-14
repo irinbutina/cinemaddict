@@ -25,7 +25,7 @@ export default class FilmPresenter {
   #mode = Mode.DEFAULT;
 
 
-  constructor({containerList, commentsAll, onDataChange, onModeChange}) {
+  constructor({ containerList, commentsAll, onDataChange, onModeChange }) {
     this.#containerList = containerList;
     this.#commentsAll = commentsAll;
     this.#handleDataChange = onDataChange;
@@ -60,7 +60,7 @@ export default class FilmPresenter {
       onCommentDelete: this.#handleCommentsDelete
     });
 
-    if (prevFilmComponent === null ) {
+    if (prevFilmComponent === null) {
       render(this.#filmComponent, this.#containerList);
     } else {
       replace(this.#filmComponent, prevFilmComponent);
@@ -98,27 +98,11 @@ export default class FilmPresenter {
     this.#closePopup();
   };
 
-
-  #handleWatchlistClick = () => {
-    const currentPosition = this.#filmPopupComponent.scrollPosition;
-    this.#handleDataChange(
-      UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
-      {
-        ...this.#film,
-        userDetails: {
-          ...this.#film.userDetails,
-          isWatchlist : !this.#film.userDetails.isWatchlist
-        }
-      });
-    this.#filmPopupComponent.scrollPopup(currentPosition);
-  };
-
   #handleHistoryClick = () => {
     const currentPosition = this.#filmPopupComponent.scrollPosition;
     this.#handleDataChange(
       UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
+      this.#mode === Mode.POPUP ? UpdateType.PATCH : UpdateType.MINOR,
       {
         ...this.#film,
         userDetails: {
@@ -133,7 +117,7 @@ export default class FilmPresenter {
     const currentPosition = this.#filmPopupComponent.scrollPosition;
     this.#handleDataChange(
       UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
+      this.#mode === Mode.POPUP ? UpdateType.PATCH : UpdateType.MINOR,
       {
         ...this.#film,
         userDetails: {
@@ -144,12 +128,35 @@ export default class FilmPresenter {
     this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
+  #handleWatchlistClick = () => {
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
+    this.#handleDataChange(
+      UserAction.UPDATE_FILM,
+      this.#mode === Mode.POPUP ? UpdateType.PATCH : UpdateType.MINOR,
+      {
+        ...this.#film,
+        userDetails: {
+          ...this.#film.userDetails,
+          isWatchlist: !this.#film.userDetails.isWatchlist
+        }
+      });
+    this.#filmPopupComponent.scrollPopup(currentPosition);
+  }
+
   #handleCommentsAdd = () => {
     console.log('submit')
   };
 
-  #handleCommentsDelete = () => {
-    console.log('delete')
+  #handleCommentsDelete = (payload) => {
+    console.log(payload)
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
+
+    this.#handleDataChange(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      payload
+    );
+    this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #openPopup() {
@@ -165,7 +172,6 @@ export default class FilmPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
     bodyElement.classList.remove('hide-overflow');
-
   }
 
   #escKeyDownHandler = (evt) => {
