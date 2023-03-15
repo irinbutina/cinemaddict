@@ -1,12 +1,10 @@
-import FiltersView from './view/filters-view.js';
-// import SortView from './view/sort-view.js';
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
+import FilterModel from './model/filter-model.js';
 import FilmsPresenter from './presenter/films-presenter.js';
-import { render } from './framework/render.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FooterPresenter from './presenter/footer-presenter.js';
-import { generateFilter } from './mock.js/filter.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -15,15 +13,21 @@ const footerStatisticsContainer = siteFooterElement.querySelector('.footer__stat
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
-console.log
-
-const filters = generateFilter(filmsModel.films);
+const filterModel = new FilterModel();
 
 const filmsPresenter = new FilmsPresenter({
   filmsContainer: siteMainElement,
   filmsModel,
-  commentsModel
+  commentsModel,
+  filterModel,
 });
+
+const filterPresenter = new FilterPresenter({
+  filterContainer: siteMainElement,
+  filterModel,
+  filmsModel
+});
+
 
 const headerPresenter = new HeaderPresenter({
   container: siteHeaderElement,
@@ -37,9 +41,8 @@ const footerPresenter = new FooterPresenter ({
 
 headerPresenter.init();
 
-render (new FiltersView({filters}), siteMainElement);
 // render (new SortView(), siteMainElement);
-
+filterPresenter.init();
 filmsPresenter.init();
 
 footerPresenter.init();

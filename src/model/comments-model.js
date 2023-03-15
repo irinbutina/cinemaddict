@@ -34,8 +34,8 @@ export default class CommentsModel extends Observable {
     ];
 
     update.film.commentsID = update.film.commentsID.filter((id) => id !== update.id);
-    console.log(this.#comments);
-    console.log( update.film.commentsID);
+    // console.log(this.#comments);
+    // console.log( update.film.commentsID);
     this._notify(updateType, update.film);
   }
 }

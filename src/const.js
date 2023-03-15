@@ -1,4 +1,4 @@
-import { getFilterCountAll, getFilterCountFavorites, getFilterCountHistory, getFilterCountWatchlist } from './utils/filters.js';
+// import { getFilterCountAll, getFilterCountFavorites, getFilterCountHistory, getFilterCountWatchlist } from './utils/filters.js';
 
 const COMMENTS_EMOTION = ['smile', 'sleeping', 'puke', 'angry'];
 
@@ -19,30 +19,6 @@ const FilterType = {
   HISTORY: 'History',
   FAVORITES: 'Favorites',
 };
-
-
-const Filters = [
-  {
-    title: FilterType.ALL,
-    link: 'all',
-    count: (films) => getFilterCountAll(films),
-  },
-  {
-    title: FilterType.WATCHLIST,
-    link: 'watchlist',
-    count: (films) => getFilterCountWatchlist(films),
-  },
-  {
-    title: FilterType.HISTORY,
-    link: 'history',
-    count: (films) => getFilterCountHistory(films),
-  },
-  {
-    title: FilterType.FAVORITES,
-    link: 'favorites',
-    count: (films) => getFilterCountFavorites(films)
-  },
-];
 
 const LIST_EMPTY_TEXT = {
   [FilterType.ALL]: 'There are no movies in our database',
@@ -83,5 +59,5 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, SortTypeExtra, Filters, FILM_COUNT_PER_STEP, FilmsListTitle, UserAction, UpdateType };
+export { COMMENTS_EMOTION, CardCount, PROFILE_RATING, FilterType, LIST_EMPTY_TEXT, SortType, SortTypeExtra, FILM_COUNT_PER_STEP, FilmsListTitle, UserAction, UpdateType };
 

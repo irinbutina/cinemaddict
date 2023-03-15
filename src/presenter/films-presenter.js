@@ -1,21 +1,23 @@
 import { remove, render } from '../framework/render';
 import FilmsContentView from '../view/films-content-view.js';
 import FilmsListView from '../view/films-list-view.js';
-import FilmsListContainerView from '../view/films-list-container-view';
+import FilmsListContainerView from '../view/films-list-container-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import { CardCount, FilterType, SortTypeExtra, FILM_COUNT_PER_STEP, FilmsListTitle, SortType, UserAction, UpdateType } from '../const';
-import { sortFilmsByCommented, sortFilmsByDate, sortFilmsByRated } from '../utils/utils';
-import ListEmptyView from '../view/list-empty-view';
-import FilmPresenter from './film-presenter';
-import SortView from '../view/sort-view';
+import { CardCount, FilterType, SortTypeExtra, FILM_COUNT_PER_STEP, FilmsListTitle, SortType, UserAction, UpdateType } from '../const.js';
+import { sortFilmsByCommented, sortFilmsByDate, sortFilmsByRated } from '../utils/utils.js';
+import ListEmptyView from '../view/list-empty-view.js';
+import FilmPresenter from './film-presenter.js';
+import SortView from '../view/sort-view.js';
+import { filter } from '../utils/filters.js';
 
 export default class FilmsPresenter {
   #filmsContainer = null;
   #filmsModel = null;
   #commentsModel = null;
+  #filterModel = null;
+
   #showMoreButtonComponent = null;
-  #commentsAll = [];
   #sortComponent = null;
   #currentSortType = SortType.DEFAULT;
 
@@ -44,23 +46,29 @@ export default class FilmsPresenter {
 
   #listEmptyComponent = new ListEmptyView({filterType: FilterType.ALL});
 
-  constructor({ filmsContainer, filmsModel, commentsModel }) {
+  constructor({ filmsContainer, filmsModel, commentsModel, filterModel }) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
     this.#commentsModel = commentsModel;
+    this.#filterModel = filterModel;
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#commentsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get films() {
+    const filterType = this.#filterModel.filter;
+    const films = this.#filmsModel.films;
+    const filteredFilms = filter[filterType](films);
+
     switch (this.#currentSortType) {
       case SortType.SORT_BY_DATE:
-        return [...this.#filmsModel.films].sort(sortFilmsByDate);
+        return filteredFilms.sort(sortFilmsByDate);
       case SortType.SORT_BY_RATING:
-        return [...this.#filmsModel.films].sort(sortFilmsByRated);
+        return filteredFilms.sort(sortFilmsByRated);
     }
-    return this.#filmsModel.films;
+    return filteredFilms;
   }
 
   get comments() {
@@ -220,16 +228,12 @@ export default class FilmsPresenter {
 
   #renderFilmsBoard() {
     this.#renderSort();
-    console.log('renderFilmsBoard')
-    // console.log(this.#filmsContainer)
     render(this.#filmsContentComponent, this.#filmsContainer);
     this.#renderFilmsList();
   }
 
   #clearFilmsBoard({resetRenderedFilmsCount = false, resetSortType = false} = {}) {
-
     const filmsCount = this.films.length;
-    console.log(filmsCount)
 
     this.#filmsPresenters.forEach((presenter) => presenter.destroy());
     this.#filmsPresenters.clear();
@@ -239,7 +243,6 @@ export default class FilmsPresenter {
     remove(this.#showMoreButtonComponent);
 
     if (resetRenderedFilmsCount) {
-      console.log('renderedFilmsCount')
       this.#renderedFilmsCount = FILM_COUNT_PER_STEP;
     } else {
       // На случай, если перерисовка доски вызвана
@@ -249,7 +252,6 @@ export default class FilmsPresenter {
     }
 
     if (resetSortType) {
-      console.log('resetSortType')
       this.#currentSortType = SortType.DEFAULT;
     }
   }

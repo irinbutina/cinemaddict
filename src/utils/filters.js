@@ -1,4 +1,10 @@
-export const getFilterCountAll = (films) => films.length;
-export const getFilterCountWatchlist = (films) => films.filter((film) => film.userDetails.watchlist).length;
-export const getFilterCountHistory = (films) => films.filter((film) => film.userDetails.alreadyWatched).length;
-export const getFilterCountFavorites = (films) => films.filter((film) => film.userDetails.favorite).length;
+import {FilterType} from '../const';
+
+const filter = {
+  [FilterType.ALL]: (films) => films.filter((film) => film),
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.userDetails.isWatchlist),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.userDetails.isHistory),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.userDetails.isFavorite),
+};
+
+export {filter};
