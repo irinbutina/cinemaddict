@@ -2,6 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeCommentsDate, humanizeDuration, humanizeReleaseDate } from '../utils/card.js';
 import { splitByWords } from '../utils/utils.js';
 import { COMMENTS_EMOTION } from '../const.js';
+import { nanoid } from 'nanoid';
 
 // const newComment = {
 //   commentText: '',
@@ -47,8 +48,8 @@ ${createEmojiTemplate(currentSmile)}
 </div>`);
 
 const createNewCommentTemplate = (newComment) => {
-  const { emoji, commentText } = newComment;
-  const isEmoji = emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">` : '';
+  const { emotion, commentText } = newComment;
+  const isEmoji = emotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">` : '';
   const isCommentText = commentText ? commentText : '';
   return `
   <form class="film-details__new-comment" action="" method="get">
@@ -56,7 +57,7 @@ const createNewCommentTemplate = (newComment) => {
   <label class="film-details__comment-label">
     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isCommentText}</textarea>
   </label>
-  ${createEmojiListTemplate(emoji)}
+  ${createEmojiListTemplate(emotion)}
 </form>`;
 };
 
@@ -158,10 +159,6 @@ const createFilmDetailsTemplate = (film, commentsFilm) => {
 
 
 export default class FilmDetailsView extends AbstractStatefulView {
-  // #newCommentState = {
-  //   emoji: '',
-  //   commentText: '',
-  // };
 
   #film = null;
   #commentsFilm = null;
@@ -237,19 +234,15 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#changeEmojiHandler);
   }
 
-
-
   #changeEmojiHandler = (evt) => {
-    // console.log(this._state)
     evt.preventDefault();
     this.updateElement({
       ...this._state,
       newComment: {
         ...this._state.newComment,
-        emoji: evt.target.value,
+        emotion: evt.target.value,
       }
     });
-    // console.log(this._state)
   };
 
   #inputTextCommentHandler = (evt) => {
@@ -261,14 +254,17 @@ export default class FilmDetailsView extends AbstractStatefulView {
         commentText: evt.target.value,
       }
     });
-    // console.log(this._state)
   };
 
   #addCommentHandler = (evt) => {
     if (evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
       evt.preventDefault();
-      // this.#handleCommentAdd();
-      console.log('addCommentHandler')
+      this.#handleCommentAdd({
+        film: this.#film,
+        newComment: {
+          id: nanoid(), ...this._state.newComment
+        }
+      });
     }
   };
 
@@ -278,8 +274,6 @@ export default class FilmDetailsView extends AbstractStatefulView {
       id: evt.target.dataset.commentId,
       film: this.#film,
     });
-    console.log(evt.target.dataset.commentId)
-    console.log('deleteCommentHandler')
   };
 
   #popupCloseButtonClickHandler = (evt) => {
@@ -303,34 +297,16 @@ export default class FilmDetailsView extends AbstractStatefulView {
   };
 
   static parseCardToState(film) {
-    // console.log(film)
     return {
       ...film,
       newComment: {
         ...film.newComment,
         commentText: '',
-        emoji: '',
+        emotion: '',
+        date: new Date()
       }
     };
   }
-
-  // static parseStateToCard(state) {
-  //   const comment = {
-  //     ...state,
-  //   };
-
-  //   return comment;
-  // }
-
-  // static parseCardToState(film) {
-  //   return {
-  //     ...film,
-  //     newComment: {
-  //       commentText: '',
-  //       emoji: '',
-  //     },
-  //   };
-  // }
 
   static parseStateToCard(state) {
     const film = {

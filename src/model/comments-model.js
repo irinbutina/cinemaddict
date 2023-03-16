@@ -12,16 +12,14 @@ export default class CommentsModel extends Observable {
 
   addComment(updateType, update) {
     this.#comments = [
-      update,
+      update.newComment,
       ...this.#comments,
     ];
-
-    this._notify(updateType, update);
+    update.film.commentsID = [...update.film.commentsID, update.newComment.id];
+    this._notify(updateType, update.film);
   }
 
   deleteComment(updateType, update) {
-    console.log(update)
-    // console.log(this.#comments)
     const index = this.#comments.findIndex((comment) => comment.id === update.id);
 
     if (index === -1) {
@@ -34,8 +32,6 @@ export default class CommentsModel extends Observable {
     ];
 
     update.film.commentsID = update.film.commentsID.filter((id) => id !== update.id);
-    // console.log(this.#comments);
-    // console.log( update.film.commentsID);
     this._notify(updateType, update.film);
   }
 }

@@ -2,7 +2,7 @@ import { render, remove, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 
-import { getCommentsFilm, isEscKey } from '../utils/utils';
+import { getCommentsFilm, isEscKey, sortCommentByDate } from '../utils/utils';
 import { UpdateType, UserAction } from '../const';
 
 
@@ -30,12 +30,13 @@ export default class FilmPresenter {
     this.#commentsAll = commentsAll;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-
   }
 
-  init(film) {
+  init(film, comments) {
     this.#film = film;
-    this.#commentsFilm = getCommentsFilm(this.#commentsAll, this.#film.commentsID);
+    this.#commentsAll = comments;
+
+    this.#commentsFilm = getCommentsFilm(this.#commentsAll, this.#film.commentsID).sort(sortCommentByDate);
 
     const prevFilmComponent = this.#filmComponent;
     const prevFilmPopupComponent = this.#filmPopupComponent;
@@ -56,7 +57,7 @@ export default class FilmPresenter {
       onWatchlistClick: this.#handleWatchlistClick,
       onHistoryClick: this.#handleHistoryClick,
       onFavoriteClick: this.#handleFavoriteClick,
-      onCommentsAdd: this.#handleCommentsAdd,
+      onCommentAdd: this.#handleCommentAdd,
       onCommentDelete: this.#handleCommentsDelete
     });
 
@@ -141,14 +142,21 @@ export default class FilmPresenter {
         }
       });
     this.#filmPopupComponent.scrollPopup(currentPosition);
-  }
+  };
 
-  #handleCommentsAdd = () => {
-    console.log('submit')
+  #handleCommentAdd = (payload) => {
+    const currentPosition = this.#filmPopupComponent.scrollPosition;
+
+    this.#handleDataChange(
+      UserAction.ADD_COMMENT,
+      UpdateType.PATCH,
+      payload
+    );
+
+    this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
   #handleCommentsDelete = (payload) => {
-    console.log(payload)
     const currentPosition = this.#filmPopupComponent.scrollPosition;
 
     this.#handleDataChange(
@@ -182,6 +190,5 @@ export default class FilmPresenter {
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
-
 }
 

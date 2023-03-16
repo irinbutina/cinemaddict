@@ -23,8 +23,8 @@ export const sortFilmsByRated = (a, b) => b.filmInfo.rating - a.filmInfo.rating;
 
 export const sortFilmsByDate = (a, b) => b.filmInfo.release.releaseDate - a.filmInfo.release.releaseDate;
 
-// export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-
 export const getCommentsFilm = (allComments, commentsID) => allComments.filter((comment) => commentsID.includes(comment.id));
+
+export const sortCommentByDate = (a, b) => a.date - b.date;
 
 export const getAttributeByType = (type) => type.split(' ').map((el) => el.toLowerCase()).join('-');
