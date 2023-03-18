@@ -21,5 +21,4 @@ export default class ShowMoreButtonView extends AbstractView {
     evt.preventDefault();
     this.#handleClick();
   };
-
 }
