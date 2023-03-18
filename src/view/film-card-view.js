@@ -50,6 +50,16 @@ export default class FilmCardView extends AbstractView {
     this.#handleHistoryClick = onHistoryClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
+    this._restoreHandlers();
+
+  }
+
+  _restoreHandlers() {
+    this.#setInnerHandlers();
+  }
+
+  #setInnerHandlers() {
+
     this.element.querySelector('.film-card__link').addEventListener('click', this.#cardLinkClickHandler);
     this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#cardWatchlistHandler);
     this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#cardHistoryHandler);

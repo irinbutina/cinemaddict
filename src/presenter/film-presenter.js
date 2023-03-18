@@ -167,12 +167,20 @@ export default class FilmPresenter {
     this.#filmPopupComponent.scrollPopup(currentPosition);
   };
 
+  #disabledButtons(bool = true) {
+    const btns = document.querySelectorAll('.film-card__controls-item');
+    for (const btn of btns) {
+      btn.disabled = bool;
+    }
+  }
+
   #openPopup() {
     bodyElement.appendChild(this.#filmPopupComponent.element);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
     this.#mode = Mode.POPUP;
     bodyElement.classList.add('hide-overflow');
+    this.#disabledButtons();
   }
 
   #closePopup() {
@@ -180,6 +188,7 @@ export default class FilmPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
     bodyElement.classList.remove('hide-overflow');
+    this.#disabledButtons(false);
   }
 
   #escKeyDownHandler = (evt) => {
