@@ -3,11 +3,7 @@ import { humanizeCommentsDate, humanizeDuration, humanizeReleaseDate } from '../
 import { splitByWords } from '../utils/utils.js';
 import { COMMENTS_EMOTION } from '../const.js';
 import { nanoid } from 'nanoid';
-
-// const newComment = {
-//   commentText: '',
-//   emoji: '',
-// };
+import he from 'he';
 
 const createGenreTemplate = (genres) => genres.map((genre) => `<span   class="film-details__genre">${genre}</span>`).join('\n');
 
@@ -20,7 +16,7 @@ const createCommentsTemplate = (commentsFilm) => commentsFilm.map((comment) => {
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
         </span>
         <div>
-          <p class="film-details__comment-text">${commentText}</p>
+          <p class="film-details__comment-text">${he.encode(commentText)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${commentDate}</span>
