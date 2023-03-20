@@ -28,3 +28,6 @@ export const getCommentsFilm = (allComments, commentsID) => allComments.filter((
 export const sortCommentByDate = (a, b) => a.date - b.date;
 
 export const getAttributeByType = (type) => type.split(' ').map((el) => el.toLowerCase()).join('-');
+
+
+export const getCountWatchedFilms = (films) => films.filter((film) => film.userDetails.isWatchlist).length;

@@ -1,24 +1,40 @@
-import { render } from '../framework/render.js';
+import { remove, render, replace } from '../framework/render.js';
+import { getCountWatchedFilms } from '../utils/utils.js';
 import ProfileView from '../view/profile-view.js';
 
 export default class HeaderPresenter {
   #container = null;
   #filmsModel = null;
+  #headerComponent = null;
 
   constructor ({container, filmsModel }) {
     this.#container = container;
     this.#filmsModel = filmsModel;
+
+
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
-    this.#renderProfileRating();
+    const prevHeaderComponent = this.#headerComponent;
+    const userRang = getCountWatchedFilms(this.#filmsModel.films);
+
+    this.#headerComponent = new ProfileView({rating: userRang});
+
+    if (prevHeaderComponent === null) {
+      render(this.#headerComponent, this.#container);
+      return;
+    }
+
+    replace(this.#headerComponent, prevHeaderComponent);
+    remove(prevHeaderComponent);
   }
 
-  #renderProfileRating() {
-    render (new ProfileView({rating: this.#getCountWatchedFilms()}), this.#container);
+  destroy() {
+    remove(this.#headerComponent);
   }
 
-  #getCountWatchedFilms() {
-    return this.#filmsModel.films.filter((film) => film.userDetails.alreadyWatched).length;
-  }
+  #handleModelEvent = () => {
+    this.init();
+  };
 }
