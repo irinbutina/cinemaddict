@@ -59,7 +59,6 @@ const createNewCommentTemplate = (newComment) => {
 
 const createFilmDetailsTemplate = (film, commentsFilm) => {
   const { filmInfo, userDetails, newComment } = film;
-  // const commentsFilm = comments.filter((comment) => commentsID.includes(comment.id));
   const { title, alternativeTitle, rating, ageRating, release, duration, genre, poster, description, director, writers, actors, } = filmInfo;
   const { isWatchlist, isHistory, isFavorite } = userDetails;
   const { releaseDate, releaseCountry } = release;
@@ -266,6 +265,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
+    console.log(evt.target.dataset.commentId)
     this.#handleCommentDelete({
       id: evt.target.dataset.commentId,
       film: this.#film,

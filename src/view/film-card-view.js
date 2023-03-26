@@ -67,6 +67,7 @@ export default class FilmCardView extends AbstractView {
   }
 
   get template() {
+    // console.log(this.#commentsFilm)
     return createFilmCardTemplate(this.#film, this.#commentsFilm);
   }
 

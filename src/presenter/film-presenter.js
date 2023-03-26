@@ -2,7 +2,7 @@ import { render, remove, replace } from '../framework/render';
 import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
 
-import { getCommentsFilm, isEscKey, sortCommentByDate } from '../utils/utils';
+import { isEscKey, sortCommentByDate } from '../utils/utils';
 import { UpdateType, UserAction } from '../const';
 
 
@@ -20,30 +20,27 @@ export default class FilmPresenter {
   #handleModeChange = null;
 
   #film = null;
-  #commentsAll = null;
-  #commentsFilm = null;
+  #commentsModel = null;
   #mode = Mode.DEFAULT;
 
 
-  constructor({ containerList, commentsAll, onDataChange, onModeChange }) {
+  constructor({ containerList, onDataChange, commentsModel, onModeChange }) {
     this.#containerList = containerList;
-    this.#commentsAll = commentsAll;
+    this.#commentsModel = commentsModel;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
-  init(film, comments) {
+  async init(film) {
     this.#film = film;
-    this.#commentsAll = comments;
-
-    this.#commentsFilm = getCommentsFilm(this.#commentsAll, this.#film.commentsID).sort(sortCommentByDate);
-
+    await this.#commentsModel.init(this.#film.id);
+    const commentsFilm = this.#commentsModel.comments.sort(sortCommentByDate);
     const prevFilmComponent = this.#filmComponent;
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmComponent = new FilmCardView({
       film: this.#film,
-      commentsFilm: this.#commentsFilm,
+      commentsFilm,
       onCardLinkClick: this.#handleCardLinkClick,
       onWatchlistClick: this.#handleWatchlistClick,
       onHistoryClick: this.#handleHistoryClick,
@@ -52,7 +49,7 @@ export default class FilmPresenter {
 
     this.#filmPopupComponent = new FilmDetailsView({
       film: this.#film,
-      commentsFilm: this.#commentsFilm,
+      commentsFilm,
       onPopupCloseButtonClick: this.#handlePopupCloseButtonClick,
       onWatchlistClick: this.#handleWatchlistClick,
       onHistoryClick: this.#handleHistoryClick,

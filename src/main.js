@@ -5,8 +5,8 @@ import FilmsPresenter from './presenter/films-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FooterPresenter from './presenter/footer-presenter.js';
-import FilmsApiService from './films-api-service.js';
-import CommentsApiService from './comments-api-service.js';
+import FilmsApiService from './api/films-api-service.js';
+import CommentsApiService from './api/comments-api-service.js';
 
 
 const AUTHORIZATION = 'Basic hd;as3fehf;sehath';
@@ -24,6 +24,7 @@ const filmsModel = new FilmsModel({
 const commentsModel = new CommentsModel({
   commentsApiService: new CommentsApiService(END_POINT, AUTHORIZATION)
 });
+console.log(commentsModel)
 const filterModel = new FilterModel();
 
 const filmsPresenter = new FilmsPresenter({
@@ -39,7 +40,6 @@ const filterPresenter = new FilterPresenter({
   filmsModel
 });
 
-
 const headerPresenter = new HeaderPresenter({
   container: siteHeaderElement,
   filmsModel
@@ -51,8 +51,6 @@ const footerPresenter = new FooterPresenter ({
 });
 
 headerPresenter.init();
-
-// render (new SortView(), siteMainElement);
 filterPresenter.init();
 filmsPresenter.init();
 filmsModel.init();

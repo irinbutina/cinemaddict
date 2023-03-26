@@ -72,10 +72,6 @@ export default class FilmsPresenter {
     return filteredFilms;
   }
 
-  get comments() {
-    return this.#commentsModel.comments;
-  }
-
   // #getfilmsExtra(sortTypeExtra) {
   //   if (sortTypeExtra === SortTypeExtra.MOST_COMMENTED) {
   //     return this.#filmsModel.films.sort(sortFilmsByCommented).slice(0, CardCount.EXTRA);
@@ -86,6 +82,7 @@ export default class FilmsPresenter {
   // }
 
   init() {
+
     this.#renderFilmsBoard();
   }
 
@@ -108,12 +105,16 @@ export default class FilmsPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
+
+      console.log(updateType, update)
         this.#filmsModel.updateFilm (updateType, update);
         break;
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(updateType,update);
         break;
       case UserAction.DELETE_COMMENT:
+        console.log(updateType, update)
+        console.log(this.#commentsModel)
         this.#commentsModel.deleteComment(updateType, update);
         break;
     }
@@ -122,7 +123,8 @@ export default class FilmsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#filmsPresenters.get(data.id).init(data, this.comments);
+        console.log(this.#commentsModel)
+        this.#filmsPresenters.get(data.id).init(data, this.#commentsModel);
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();
@@ -172,12 +174,13 @@ export default class FilmsPresenter {
   #renderFilm(film, container) {
     const filmPresenter = new FilmPresenter({
       containerList: container,
-      commentsAll: this.comments,
+      commentsModel:  this.#commentsModel,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
-    filmPresenter.init(film, this.comments);
+    filmPresenter.init(film);
     this.#filmsPresenters.set(film.id, filmPresenter);
+    console.log(this.#commentsModel)
   }
 
   #renderFilms(films, container = this.#filmsListAllContainerComponent.element) {

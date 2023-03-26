@@ -25,7 +25,12 @@ export const sortFilmsByDate = (a, b) => b.filmInfo.release.releaseDate - a.film
 
 export const getCommentsFilm = (allComments, commentsID) => allComments.filter((comment) => commentsID.includes(comment.id));
 
-export const sortCommentByDate = (a, b) => a.date - b.date;
+export const sortCommentByDate = (a, b) => {
+ const s = a.date - b.date;
+ console.log(a.date)
+ return s
+}
+// export const sortCommentByDate = (a, b) => a.date - b.date;
 
 export const getAttributeByType = (type) => type.split(' ').map((el) => el.toLowerCase()).join('-');
 
