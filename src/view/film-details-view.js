@@ -257,11 +257,22 @@ export default class FilmDetailsView extends AbstractStatefulView {
       this.#handleCommentAdd({
         film: this.#film,
         newComment: {
-          id: nanoid(), ...this._state.newComment
+          ...this._state.newComment
         }
       });
     }
   };
+  // #addCommentHandler = (evt) => {
+  //   if (evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
+  //     evt.preventDefault();
+  //     this.#handleCommentAdd({
+  //       film: this.#film,
+  //       newComment: {
+  //         id: nanoid(), ...this._state.newComment
+  //       }
+  //     });
+  //   }
+  // };
 
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
@@ -299,7 +310,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
         ...film.newComment,
         commentText: '',
         emotion: '',
-        date: new Date()
+        // date: new Date()
       }
     };
   }

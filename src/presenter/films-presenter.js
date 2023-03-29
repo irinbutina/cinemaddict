@@ -113,8 +113,6 @@ export default class FilmsPresenter {
         this.#commentsModel.addComment(updateType,update);
         break;
       case UserAction.DELETE_COMMENT:
-        console.log(updateType, update)
-        console.log(this.#commentsModel)
         this.#commentsModel.deleteComment(updateType, update);
         break;
     }
@@ -123,12 +121,14 @@ export default class FilmsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        console.log(this.#commentsModel)
+        // console.log(this.#commentsModel)
         this.#filmsPresenters.get(data.id).init(data, this.#commentsModel);
         break;
       case UpdateType.MINOR:
+        console.log('clear')
         this.#clearFilmsBoard();
         this.#renderFilmsBoard();
+        console.log('render')
         break;
       case UpdateType.MAJOR:
         this.#clearFilmsBoard({resetRenderedFilmsCount: true, resetSortType: true});
@@ -172,6 +172,7 @@ export default class FilmsPresenter {
   };
 
   #renderFilm(film, container) {
+    console.log(film)
     const filmPresenter = new FilmPresenter({
       containerList: container,
       commentsModel:  this.#commentsModel,
@@ -179,12 +180,14 @@ export default class FilmsPresenter {
       onModeChange: this.#handleModeChange,
     });
     filmPresenter.init(film);
+     console.log('render film')
     this.#filmsPresenters.set(film.id, filmPresenter);
-    console.log(this.#commentsModel)
+    // console.log(this.#commentsModel)
   }
 
   #renderFilms(films, container = this.#filmsListAllContainerComponent.element) {
     films.forEach((film) => this.#renderFilm(film, container));
+    console.log('render films')
   }
 
   #renderFilmsListAll() {
@@ -193,7 +196,7 @@ export default class FilmsPresenter {
 
     const films = this.films;
     const filmsCount = films.length;
-
+    console.log(this.films)
     render(this.#filmsListAllContainerComponent, this.#filmsListAllComponent.element);
 
     this.#renderFilms(films.slice(0, Math.min(filmsCount, this.#renderedFilmsCount)));

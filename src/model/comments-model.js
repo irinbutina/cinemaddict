@@ -14,90 +14,50 @@ export default class CommentsModel extends Observable {
     this.#comments = comments;
   }
 
-
   get comments() {
-    console.log(this.#comments)
+    // console.log(this.#comments)
     return this.#comments;
   }
 
   async init(filmId) {
     try {
-
       const comments = await this.#commentsApiService.getComments(filmId);
       this.#comments = comments.map(this.#adaptToClient);
-      console.log(this.#comments)
     } catch (err) {
-      // console.log('error')
       this.#comments = [];
     }
   }
 
   addComment(updateType, update) {
-    this.#comments = [
-      update.newComment,
-      ...this.#comments,
-    ];
-    update.film.commentsID = [...update.film.commentsID, update.newComment.id];
-    this._notify(updateType, update.film);
+    try {
+      return this.#commentsApiService.addComment(update.film.id, update.newComment)
+        .then((response) => {
+          this.#comments = response.comments.map(this.#adaptToClient);
+          this._notify(updateType, update.film);
+        });
+    } catch(err) {
+      throw new Error('Can\'t add comment');
+    }
   }
 
   deleteComment(updateType, update) {
-
     try {
-      console.log(this.#comments)
-      return this.#commentsApiService.deleteComment(update.id).then(() => {
-        update.film.commentsID = update.film.commentsID.filter((id) => id !== update.id);
-        this._notify(updateType, update.film);
-      })
+      return this.#commentsApiService.deleteComment(update.id)
+        .then(() => {
+          update.film.commentsID = update.film.commentsID.filter((id) => id !== update.id);
+          this._notify(updateType, update.film);
+        });
     } catch (err) {
       throw new Error('Can\'t delete point');
     }
-    // const index = this.#comments.findIndex((comment) => comment.id === update.id);
-
-    // if (index === -1) {
-    //   throw new Error('Can\'t delete unexisting comment');
-    // }
-
-    // this.#comments = [
-    //   ...this.#comments.slice(0, index),
-    //   ...this.#comments.slice(index + 1),
-    // ];
-
-
   }
-
-  // async deleteComment(updateType, update) {
-  //   console.log(updateType, update)
-  //   console.log(this.#comments)
-  //   const index = this.#comments.findIndex((comment) => comment.id === update.id);
-
-  //   if (index === -1) {
-  //     throw new Error('Can\'t delete unexisting comment');
-  //   }
-
-  //   try {
-  //     await this.#commentsApiService.deleteComment(update);
-
-  //     this.#comments = [
-  //       ...this.#comments.slice(0, index),
-  //       ...this.#comments.slice(index + 1),
-  //     ];
-  //     this._notify(updateType);
-
-  //   } catch (err) {
-  //     throw new Error('Can\'t delete point');
-  //   }
-
-
-  //   update.film.commentsID = update.film.commentsID.filter((id) => id !== update.id);
-  //   this._notify(updateType, update.film);
-  // }
 
   #adaptToClient(comment) {
     const adaptedComment = {
       ...comment,
-      commentText: comment['comment'],
-      date:  comment['date'] !== null ? new Date(comment['date']) : comment['date'],
+      commentText: comment.comment,
+      date: new Date(comment.date)
+
     };
     delete adaptedComment['comment'];
 

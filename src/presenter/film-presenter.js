@@ -70,6 +70,7 @@ export default class FilmPresenter {
 
     remove(prevFilmComponent);
     remove(prevFilmPopupComponent);
+    console.log( this.#film, commentsFilm)
   }
 
   destroy() {

@@ -20,7 +20,6 @@ export default class FilmsModel extends Observable {
       const films = await this.#filmsApiService.films;
       this.#films = films.map(this.#adaptToClient);
 
-      // console.log(this.#films)
     } catch (err) {
       this.#films = [];
     }
@@ -28,19 +27,25 @@ export default class FilmsModel extends Observable {
     this._notify(UpdateType.INIT);
   }
 
-  updateFilm(updateType, update) {
+  async updateFilm(updateType, update) {
     const index = this.#films.findIndex((film) => film.id === update.id);
     if (index === -1) {
       throw new Error('Can\'t update unexisting film');
     }
+    try {
+      const response = await this.#filmsApiService.updateFilm(update);
+      const updatedFilm = this.#adaptToClient(response);
 
-    this.#films = [
-      ...this.#films.slice(0, index),
-      update,
-      ...this.#films.slice(index + 1),
-    ];
+      this.#films = [
+        ...this.#films.slice(0, index),
+        updatedFilm,
+        ...this.#films.slice(index + 1),
+      ];
+      this._notify(updateType, updatedFilm);
 
-    this._notify(updateType, update);
+    } catch(err) {
+      throw new Error('Can\'t update card');
+    }
   }
 
   #adaptToClient(film) {
@@ -60,8 +65,8 @@ export default class FilmsModel extends Observable {
       userDetails: {
         ...film['user_details'],
         isWatchlist: film['user_details'].watchlist,
-        watchingDate: film['user_details']['already_watched'],
-        isHistory: film['user_details']['watching_date'],
+        watchingDate: new Date(film['user_details']['watching_date']),
+        isHistory: film['user_details']['already_watched'],
         isFavorite: film['user_details'].favorite,
       }
     };
